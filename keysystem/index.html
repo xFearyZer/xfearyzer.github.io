@@ -15,61 +15,27 @@
     </div>
 
     <script>
-        // ===== KIỂM TRA BẢO MẬT NÂNG CAO =====
-        const kiemTraBaoMat = () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const thamSo = {
-                token: urlParams.get('vt'),       // Token xác minh
-                session: urlParams.get('session'), // ID phiên
-                timestamp: urlParams.get('ts')    // Thời gian
-            };
+        // ================= PHẦN KIỂM TRA BẢO MẬT =================
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('vt');
+        const sessionId = urlParams.get('session');
+        const timestamp = urlParams.get('ts');
 
-            // Kiểm tra các tham số bắt buộc
-            if (!thamSo.token || !thamSo.session || !thamSo.timestamp) {
-                baoMatThatBai();
-                return false;
-            }
-
-            // Kiểm tra token trong localStorage
-            if (thamSo.token !== localStorage.getItem('yt_verify_token')) {
-                baoMatThatBai();
-                return false;
-            }
-
-            // Kiểm tra session trong sessionStorage
-            if (thamSo.session !== sessionStorage.getItem('yeumoney_session')) {
-                baoMatThatBai();
-                return false;
-            }
-
-            // Kiểm tra thời gian (5 phút)
-            const thoiGian = (Date.now() - parseInt(thamSo.timestamp)) / 1000 / 60;
-            if (thoiGian > 5) {
-                baoMatThatBai();
-                return false;
-            }
-
-            return true;
-        };
-
-        const baoMatThatBai = () => {
-            // Xóa tất cả dữ liệu
+        if (!token || !sessionId || !timestamp || 
+            token !== localStorage.getItem('yt_verify_token') || 
+            sessionId !== sessionStorage.getItem('yeumoney_session') ||
+            (Date.now() - parseInt(timestamp)) > 300000) {
+            
             localStorage.removeItem('yt_verify_token');
             localStorage.removeItem('robloxKey');
             sessionStorage.removeItem('yeumoney_session');
-            
-            // Chuyển hướng về trang chính
-            window.location.href = "https://xfearyzer.github.io?error=truy_cap_khong_hop_le";
-        };
-
-        if (!kiemTraBaoMat()) {
-            // Dừng thực thi nếu kiểm tra thất bại
-            throw new Error("Xác minh bảo mật thất bại");
+            window.location.href = "https://xfearyzer.github.io?error=invalid_access";
+            return;
         }
 
         // Xóa token sau khi xác minh
         localStorage.removeItem('yt_verify_token');
-        // ===== KẾT THÚC PHẦN KIỂM TRA BẢO MẬT =====
+        // ============== HẾT PHẦN KIỂM TRA BẢO MẬT ==============
 
         // Hàm tạo key ngẫu nhiên
         function generateKey() {
@@ -118,13 +84,9 @@
                 const newSessionId = 'yz' + Math.random().toString(36).substr(2, 10);
                 sessionStorage.setItem('yeumoney_session', newSessionId);
                 
-                // Tạo token mới
-                const newToken = window.btoa(Date.now() + '|' + Math.random().toString(36));
-                localStorage.setItem('yt_verify_token', newToken);
-                
                 // Chuyển hướng với tham số mới
                 const returnUrl = encodeURIComponent(
-                    `https://xfearyzer-verify.github.io/?session=${newSessionId}&vt=${newToken}&ts=${Date.now()}`
+                    `https://xfearyzer-verify.github.io/?session=${newSessionId}`
                 );
                 window.location.href = `https://yeumoney.com/go/SfSm2t3P?return_url=${returnUrl}`;
             });
