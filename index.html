@@ -10,21 +10,41 @@
     <div class="container">
         <h1>Get Your Roblox Key</h1>
         <button id="getKeyBtn">Get Key Now</button>
+        <p class="note">Complete verification to receive your key</p>
     </div>
 
     <script>
         document.getElementById('getKeyBtn').addEventListener('click', function() {
-            // Lưu trạng thái đang chờ xác minh
-            localStorage.setItem('awaitingVerification', 'true');
+            // 1. Tạo session ID ngẫu nhiên (12 ký tự)
+            const sessionId = 'yz' + Math.random().toString(36).substr(2, 10);
             
-            // Chuyển đến link rút gọn YeuMoney
-            window.location.href = "https://yeumoney.com/go/SfSm2t3P";
+            // 2. Lưu trạng thái vào sessionStorage
+            sessionStorage.setItem('yeumoney_session', sessionId);
             
-            // Sau 5 giây tự động chuyển về trang key (giả lập)
+            // 3. Tạo URL trả về với session ID
+            const returnUrl = encodeURIComponent(
+                `https://xfearyzer-verify.github.io/?session=${sessionId}`
+            );
+            
+            // 4. Chuyển hướng đến Yeumoney với các tham số
+            window.location.href = `https://yeumoney.com/go/SfSm2t3P?return_url=${returnUrl}`;
+            
+            // 5. (Optional) Backup: Tự động chuyển sau 30s nếu Yeumoney không redirect
             setTimeout(function() {
-                window.location.href = "https://xfearyzer.github.io/keysystem/";
-            }, 5000);
+                if (!document.hidden) {
+                    alert('Verification taking too long. Redirecting...');
+                    window.location.href = `https://xfearyzer-verify.github.io/?session=${sessionId}`;
+                }
+            }, 30000);
         });
+
+        // Kiểm tra nếu đã có key hợp lệ thì chuyển thẳng đến trang key
+        const existingKey = localStorage.getItem('roblox_key');
+        const expiry = localStorage.getItem('key_expiry');
+        
+        if (existingKey && expiry && new Date().getTime() < expiry) {
+            window.location.href = "https://xfearyzer.github.io/keysystem/";
+        }
     </script>
 </body>
 </html>
