@@ -1,148 +1,169 @@
-/* Biến màu sắc chung */
 :root {
-  --primary-color: #4285f4;
-  --secondary-color: #34a853;
-  --danger-color: #ea4335;
-  --warning-color: #fbbc05;
-  --dark-color: #202124;
-  --light-color: #f8f9fa;
+    --primary: #00c6ff;
+    --secondary: #0072ff;
+    --dark-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    --card-bg: rgba(0, 0, 0, 0.3);
+    --text-light: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
 }
 
-/* Reset và font chữ */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  color: var(--dark-color);
-  line-height: 1.6;
-  min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--dark-bg);
+    color: var(--text-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    line-height: 1.6;
 }
 
-/* Layout chung */
 .container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+    text-align: center;
+    background: var(--card-bg);
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Header */
+.container::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes rotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.logo {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
 h1 {
-  color: var(--primary-color);
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
-  font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
-/* Nút bấm */
+.subtitle {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+}
+
 button {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  font-size: 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin: 10px;
-  font-weight: 600;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
 }
 
 button:hover {
-  background-color: #3367d6;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: var(--secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
 }
 
 button:active {
-  transform: translateY(0);
+    transform: translateY(0);
 }
 
-button i {
-  margin-right: 8px;
-}
-
-/* Key display */
-.key-value {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--secondary-color);
-  margin: 1.5rem 0;
-  padding: 1rem;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  word-break: break-all;
-}
-
-.expiry-info {
-  color: #666;
-  font-size: 0.9rem;
-  margin: 1rem 0;
-}
-
-/* Copy button */
-#copyKeyBtn {
-  background-color: var(--secondary-color);
-}
-
-#copyKeyBtn:hover {
-  background-color: #2d9249;
-}
-
-/* Renew button */
-#renewKeyBtn {
-  background-color: var(--warning-color);
-  color: var(--dark-color);
-}
-
-#renewKeyBtn:hover {
-  background-color: #e8ac04;
-}
-
-/* Thông báo hết hạn */
-.expiry-notice {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--warning-color);
-  color: var(--dark-color);
-  padding: 12px;
-  text-align: center;
-  font-size: 14px;
-  animation: scrollText 15s linear infinite;
-  white-space: nowrap;
-  z-index: 1000;
-}
-
-@keyframes scrollText {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .container {
+.key-display {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
     padding: 1rem;
-  }
-  
-  h1 {
-    font-size: 2rem;
-  }
-  
-  .key-value {
-    font-size: 1.4rem;
-  }
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    word-break: break-all;
+    border-left: 4px solid var(--primary);
+    animation: fadeIn 0.5s ease;
 }
 
-/* Hiệu ứng fade in */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.container {
-  animation: fadeIn 0.5s ease-out;
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.social-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+}
+
+.discord {
+    background: #5865F2;
+}
+
+.youtube {
+    background: #FF0000;
+}
+
+.facebook {
+    background: #1877F2;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 1.5rem;
+    }
+    
+    h1 {
+        font-size: 1.5rem;
+    }
 }
