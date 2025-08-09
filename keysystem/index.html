@@ -1,1 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Roblox Key</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Your License Key</h1>
+        <div id="keyDisplay"></div>
+        <button id="renewKeyBtn">Generate New Key</button>
+    </div>
 
+    <script>
+        // Hàm tạo key ngẫu nhiên
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let key = '';
+            for (let i = 0; i < 10; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return `ROBLOX-${key}`;
+        }
+
+        // Xử lý khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            const keyDisplay = document.getElementById('keyDisplay');
+            const renewBtn = document.getElementById('renewKeyBtn');
+            
+            // Kiểm tra nếu vừa từ YeuMoney về
+            if (localStorage.getItem('awaitingVerification') === 'true') {
+                const newKey = generateKey();
+                
+                // Lưu key vào localStorage
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + 7); // 7 ngày
+                localStorage.setItem('robloxKey', newKey);
+                localStorage.setItem('keyExpiry', expiryDate.getTime());
+                localStorage.removeItem('awaitingVerification');
+                
+                // Hiển thị key
+                displayKey(newKey, expiryDate);
+            } else {
+                // Kiểm tra key đã lưu
+                const savedKey = localStorage.getItem('robloxKey');
+                const expiry = localStorage.getItem('keyExpiry');
+                
+                if (savedKey && expiry && new Date().getTime() < expiry) {
+                    displayKey(savedKey, new Date(parseInt(expiry)));
+                } else {
+                    // Nếu không có key hợp lệ, quay về trang chính
+                    window.location.href = "https://xfearyzer.github.io";
+                }
+            }
+            
+            // Xử lý nút renew
+            renewBtn.addEventListener('click', function() {
+                localStorage.setItem('awaitingVerification', 'true');
+                window.location.href = "https://yeumoney.com/go/SfSm2t3P";
+            });
+        });
+        
+        // Hàm hiển thị key
+        function displayKey(key, expiryDate) {
+            const daysLeft = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('keyDisplay').innerHTML = `
+                <div class="key-value">${key}</div>
+                <div class="expiry-info">
+                    Expires: ${expiryDate.toLocaleDateString()}
+                    <br>(${daysLeft} days remaining)
+                </div>
+                <button id="copyKeyBtn">
+                    <i class="far fa-copy"></i> Copy Key
+                </button>
+            `;
+            
+            // Xử lý nút copy
+            document.getElementById('copyKeyBtn').addEventListener('click', function() {
+                navigator.clipboard.writeText(key);
+                alert('Key copied to clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
