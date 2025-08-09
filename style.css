@@ -1,15 +1,27 @@
-:root{--bg1:#0f2027;--bg2:#2c5364}
-*{box-sizing:border-box}
-body{margin:0;font-family:Inter, Arial, sans-serif;min-height:100vh;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#fff;display:flex;align-items:center;justify-content:center;padding:20px}
-.container{width:100%;max-width:820px;background:rgba(255,255,255,0.03);padding:20px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.4)}
-h1{text-align:center;margin:0 0 16px 0}
-.big{padding:12px 22px;border-radius:10px;border:none;background:#00c6ff;color:#012;font-weight:700;cursor:pointer}
-.keyDisplay{margin-top:12px;font-family:monospace;background:rgba(255,255,255,0.06);padding:10px;border-radius:8px;word-break:break-all;color:#fff;display:inline-block}
-.muted{color:#bcd}
-.small{font-size:13px}
-table{width:100%;border-collapse:collapse;margin-top:12px;background:rgba(255,255,255,0.02);border-radius:6px;overflow:hidden}
-th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.04);text-align:left;font-size:14px}
-th{background:rgba(255,255,255,0.02);font-weight:700}
-button{cursor:pointer}
-input{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px;border-radius:6px;color:#fff}
-.actionBtn{background:#ff6b6b;border:none;padding:6px 10px;border-radius:6px;color:#111;font-weight:700}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: white;
+    text-align: center;
+}
+.container {
+    margin-top: 50px;
+}
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #00bfff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #009acd;
+}
+input {
+    padding: 8px;
+    margin: 5px;
+    border: none;
+    border-radius: 4px;
+}

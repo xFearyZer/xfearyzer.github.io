@@ -1,38 +1,64 @@
-// admin.js - load danh sách key và cho phép xóa
-async function loadKeys() {
-  const tbody = document.querySelector('#keyTable tbody');
-  tbody.innerHTML = '<tr><td colspan="4" class="muted">Đang tải...</td></tr>';
-  try {
-    const snap = await database.ref('keys').orderByChild('createdAt').once('value');
-    const data = snap.val() || {};
-    const arr = Object.entries(data).map(([id, v]) => ({id, ...v}));
-    const filter = document.getElementById('filter').value.trim().toUpperCase();
-    tbody.innerHTML = '';
-    arr.reverse(); // mới nhất trước
-    arr.forEach(item => {
-      if (filter && !item.key.toUpperCase().includes(filter)) return;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `<td>${item.key}</td><td>${item.createdAt||''}</td><td>${item.ip||''}</td>
-                      <td><button class="actionBtn" data-id="${item.id}">Xóa</button></td>`;
-      tbody.appendChild(tr);
-    });
-    // attach delete handlers
-    document.querySelectorAll('.actionBtn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        const id = e.currentTarget.dataset.id;
-        if (!confirm('Xác nhận xóa key?')) return;
-        await database.ref('keys/'+id).remove();
-        loadKeys();
-      });
-    });
-    if (!arr.length) tbody.innerHTML = '<tr><td colspan="4" class="muted">Chưa có key.</td></tr>';
-  } catch(err) {
-    tbody.innerHTML = '<tr><td colspan="4" class="muted">Lỗi khi tải dữ liệu.</td></tr>';
-    console.error(err);
-  }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, set, get, child, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBaHo9aZjXB-gRgAvNsnciGIUx4apEosUU",
+  authDomain: "xfearyzer-key-system.firebaseapp.com",
+  databaseURL: "https://xfearyzer-key-system-default-rtdb.firebaseio.com",
+  projectId: "xfearyzer-key-system",
+  storageBucket: "xfearyzer-key-system.appspot.com",
+  messagingSenderId: "469257270367",
+  appId: "1:469257270367:web:0d19458a6d1108b59757ea",
+  measurementId: "G-0KGNDZ74DY"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+function generateKey(prefix, role) {
+    const random = Math.random().toString(36).substr(2,10).toUpperCase();
+    return `${prefix}_${random}`;
 }
 
-document.getElementById('refreshBtn').addEventListener('click', loadKeys);
-document.getElementById('filter').addEventListener('input', loadKeys);
+document.getElementById("createKeyBtn").addEventListener("click", () => {
+    const role = document.getElementById("role").value.trim().toUpperCase();
+    const expires = document.getElementById("expires").value;
+    if (!role || !expires) {
+        alert("Please fill all fields");
+        return;
+    }
+    const newKey = generateKey("KEY" + role, role);
+    set(ref(db, 'keys/' + newKey), {
+        expires: expires,
+        status: "active"
+    }).then(() => {
+        alert("Key created: " + newKey);
+        loadKeys();
+    });
+});
 
-window.addEventListener('DOMContentLoaded', loadKeys);
+function loadKeys() {
+    const dbRef = ref(db);
+    get(child(dbRef, `keys`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            const keys = snapshot.val();
+            let html = "<ul>";
+            for (let k in keys) {
+                html += `<li>${k} - expires: ${keys[k].expires} <button onclick="deleteKey('${k}')">Delete</button></li>`;
+            }
+            html += "</ul>";
+            document.getElementById("keyList").innerHTML = html;
+        } else {
+            document.getElementById("keyList").innerHTML = "No keys found.";
+        }
+    });
+}
+
+window.deleteKey = function(key) {
+    remove(ref(db, 'keys/' + key)).then(() => {
+        alert("Key deleted: " + key);
+        loadKeys();
+    });
+}
+
+loadKeys();

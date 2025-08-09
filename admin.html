@@ -1,33 +1,19 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Admin - Quản lý Key</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Key Manager</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>Admin — Quản lý Key</h1>
-
-    <div style="margin-bottom:10px">
-      <input id="filter" placeholder="Tìm theo key..." style="width:70%;padding:8px;border-radius:6px;border:1px solid rgba(255,255,255,0.08)" />
-      <button id="refreshBtn">Làm mới</button>
+    <div class="container">
+        <h1>Admin Key Manager</h1>
+        <input type="text" id="role" placeholder="Role (e.g. 1WEEK)">
+        <input type="date" id="expires">
+        <button id="createKeyBtn">Create Key</button>
+        <div id="keyList"></div>
     </div>
-
-    <table id="keyTable">
-      <thead>
-        <tr><th>Key</th><th>Ngày tạo</th><th>IP</th><th>Hành động</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-
-  <!-- Firebase (compat) -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-
-  <script src="firebase-config.js"></script>
-  <script src="admin.js"></script>
+    <script type="module" src="admin.js"></script>
 </body>
 </html>

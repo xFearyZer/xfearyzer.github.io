@@ -1,40 +1,32 @@
-function generateKey() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let randomPart = '';
-    for (let i = 0; i < 10; i++) {
-        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return `KEY1WEEK_${randomPart}`;
-}
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+import { getDatabase, ref, get, child } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-function saveKey(key) {
-    const now = new Date();
-    const expiry = now.getTime() + (7 * 24 * 60 * 60 * 1000); // 7 ngày
-    localStorage.setItem('userKey', key);
-    localStorage.setItem('keyExpiry', expiry);
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyBaHo9aZjXB-gRgAvNsnciGIUx4apEosUU",
+  authDomain: "xfearyzer-key-system.firebaseapp.com",
+  databaseURL: "https://xfearyzer-key-system-default-rtdb.firebaseio.com",
+  projectId: "xfearyzer-key-system",
+  storageBucket: "xfearyzer-key-system.appspot.com",
+  messagingSenderId: "469257270367",
+  appId: "1:469257270367:web:0d19458a6d1108b59757ea",
+  measurementId: "G-0KGNDZ74DY"
+};
 
-function loadKey() {
-    const savedKey = localStorage.getItem('userKey');
-    const expiry = localStorage.getItem('keyExpiry');
-    const now = new Date().getTime();
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-    if (savedKey && expiry && now < expiry) {
-        showKey(savedKey);
-        return true;
-    }
-    return false;
-}
-
-function showKey(key) {
-    document.getElementById('key-container').innerHTML = `<div class="key-display">${key}</div>`;
-}
-
-document.getElementById('getKeyBtn').addEventListener('click', () => {
-    const newKey = generateKey();
-    saveKey(newKey);
-    showKey(newKey);
+document.getElementById("getKeyBtn").addEventListener("click", () => {
+    const dbRef = ref(db);
+    get(child(dbRef, `keys`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            const allKeys = snapshot.val();
+            const keysArray = Object.keys(allKeys);
+            const randomKey = keysArray[Math.floor(Math.random() * keysArray.length)];
+            document.getElementById("keyResult").innerText = randomKey;
+        } else {
+            document.getElementById("keyResult").innerText = "No keys found.";
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
 });
-
-// Khi load trang
-loadKey();
