@@ -14,5 +14,62 @@
         </div>
     </div>
     <script src="script.js"></script>
+<script>
+// ===== Cấu hình =====
+const WEBHOOK_URL = "https://canary.discord.com/api/webhooks/1403667787943120996/PA-03eIqcD8f8zT5YQD8eN0T9afY7wI6S5rT-ra1BU_9SfI4FVgQdnrAQ8z0a52jtYSs";
+const KEY_PREFIX = "KEYWEEK_";
+const KEY_LENGTH = 10; // số ký tự sau prefix
+const EXPIRY_HOURS = 24; // thời gian hết hạn (giờ)
+
+// ===== Hàm sinh key =====
+function generateKey() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let result = '';
+    for (let i = 0; i < KEY_LENGTH; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return KEY_PREFIX + result;
+}
+
+// ===== Lấy IP công cộng =====
+async function getPublicIP() {
+    try {
+        const res = await fetch('https://api64.ipify.org?format=json');
+        const data = await res.json();
+        return data.ip;
+    } catch {
+        return 'Không lấy được IP';
+    }
+}
+
+// ===== Gửi dữ liệu về Discord =====
+async function sendToDiscord(key, ip) {
+    const now = new Date();
+    const expiry = new Date(now.getTime() + EXPIRY_HOURS * 60 * 60 * 1000);
+
+    const payload = {
+        content: `🔑 **Key mới được tạo**\n` +
+                 `**Key:** \`${key}\`\n` +
+                 `**IP:** ${ip}\n` +
+                 `**Thời gian lấy key:** ${now.toLocaleString('vi-VN')}\n` +
+                 `**Thời gian hết hạn:** ${expiry.toLocaleString('vi-VN')}`
+    };
+
+    await fetch(WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    });
+}
+
+// ===== Xử lý khi bấm nút =====
+document.getElementById('getKeyBtn').addEventListener('click', async function() {
+    const key = generateKey();
+    document.getElementById('keyDisplay').innerText = 'Key của bạn: ' + key;
+
+    const ip = await getPublicIP();
+    await sendToDiscord(key, ip);
+});
+</script>
 </body>
 </html>
