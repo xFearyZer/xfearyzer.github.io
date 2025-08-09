@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool Rejoin Roblox</title>
+    <title>Key Tool Rejoin Roblox</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Tool Rejoin Roblox</h1>
+        <h1>Key Tool Rejoin Roblox</h1>
         <div id="key-container">
             <button id="getKeyBtn">Get Key</button>
             <div id="keyDisplay" style="margin-top:15px;font-size:18px;color:#ff0;"></div>
@@ -19,7 +19,7 @@
     const WEBHOOK_URL = "https://canary.discord.com/api/webhooks/1403667787943120996/PA-03eIqcD8f8zT5YQD8eN0T9afY7wI6S5rT-ra1BU_9SfI4FVgQdnrAQ8z0a52jtYSs";
     const KEY_PREFIX = "KEYWEEK_";
     const KEY_LENGTH = 10; 
-    const EXPIRY_HOURS = 24; 
+    const EXPIRY_HOURS = 120; 
 
     function generateKey() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -45,11 +45,11 @@
         const expiry = new Date(now.getTime() + EXPIRY_HOURS * 60 * 60 * 1000);
 
         const payload = {
-            content: `🔑 **Key mới được tạo**\n` +
-                     `**Key:** \`${key}\`\n` +
-                     `**IP:** ${ip}\n` +
-                     `**Thời gian lấy key:** ${now.toLocaleString('vi-VN')}\n` +
-                     `**Thời gian hết hạn:** ${expiry.toLocaleString('vi-VN')}`
+            content: `📢 **Key mới được tạo**\n` +
+                     `🔑 **Key:** \`${key}\`\n` +
+                     `🌐 **IP:** ${ip}\n` +
+                     `🔥 **Thời gian lấy key:** ${now.toLocaleString('vi-VN')}\n` +
+                     `🌪️ **Thời gian hết hạn:** ${expiry.toLocaleString('vi-VN')}`
         };
 
         await fetch(WEBHOOK_URL, {
