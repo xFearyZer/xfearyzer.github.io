@@ -1,6 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    // ===== KIỂM TRA BẢO MẬT =====
+const kiemTraBaoMat = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const thamSo = {
+        token: urlParams.get('vt'),       // Token xác minh
+        session: urlParams.get('session'), // ID phiên
+        timestamp: urlParams.get('ts')    // Thời gian
+    };
+
+    // Kiểm tra các tham số bắt buộc
+    if (!thamSo.token || !thamSo.session || !thamSo.timestamp) {
+        baoMatThatBai();
+        return false;
+    }
+
+    // Kiểm tra token trong localStorage
+    if (thamSo.token !== localStorage.getItem('yt_verify_token')) {
+        baoMatThatBai();
+        return false;
+    }
+
+    // Kiểm tra session trong sessionStorage
+    if (thamSo.session !== sessionStorage.getItem('yeumoney_session')) {
+        baoMatThatBai();
+        return false;
+    }
+
+    // Kiểm tra thời gian (5 phút)
+    const thoiGian = (Date.now() - parseInt(thamSo.timestamp)) / 1000 / 60;
+    if (thoiGian > 5) {
+        baoMatThatBai();
+        return false;
+    }
+
+    return true;
+};
+
+const baoMatThatBai = () => {
+    // Xóa tất cả dữ liệu
+    localStorage.removeItem('yt_verify_token');
+    localStorage.removeItem('roblox_key');
+    sessionStorage.removeItem('yeumoney_session');
+    
+    // Chuyển hướng về trang chính
+    window.location.href = "https://xfearyzer.github.io?error=truy_cap_khong_hop_le";
+};
+
+if (!kiemTraBaoMat()) {
+    // Dừng thực thi nếu kiểm tra thất bại
+    throw new Error("Xác minh bảo mật thất bại");
+}
+// ===== KẾT THÚC KIỂM TRA =====
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Tool Key</title>
