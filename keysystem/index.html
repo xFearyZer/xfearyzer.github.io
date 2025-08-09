@@ -3,17 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Roblox Key</title>
+    <title>Your Tool Key</title>
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>Your License Key</h1>
+        <h1>Your Tool Key</h1>
         <div id="keyDisplay"></div>
         <button id="renewKeyBtn">Generate New Key</button>
     </div>
 
     <script>
+        // ================= PHẦN KIỂM TRA BẢO MẬT =================
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('vt');
+        const sessionId = urlParams.get('session');
+
+        // Kiểm tra 4 lớp bảo mật
+        const SECURITY_CHECKS = [
+            () => token !== null,
+            () => token === localStorage.getItem('yt_verify_token'),
+            () => sessionId !== null,
+            () => sessionId === sessionStorage.getItem('yeumoney_session')
+        ];
+
+        if (!SECURITY_CHECKS.every(check => check())) {
+            // Xóa tất cả dữ liệu phiên
+            localStorage.removeItem('yt_verify_token');
+            localStorage.removeItem('robloxKey');
+            sessionStorage.removeItem('yeumoney_session');
+            
+            // Chuyển hướng với mã lỗi
+            window.location.href = "https://xfearyzer.github.io?error=invalid_access";
+            return;
+        }
+
+        // Xóa token sau khi xác minh
+        localStorage.removeItem('yt_verify_token');
+        // ============== HẾT PHẦN KIỂM TRA BẢO MẬT ==============
+
         // Hàm tạo key ngẫu nhiên
         function generateKey() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -57,8 +86,15 @@
             
             // Xử lý nút renew
             renewBtn.addEventListener('click', function() {
-                localStorage.setItem('awaitingVerification', 'true');
-                window.location.href = "https://yeumoney.com/go/SfSm2t3P";
+                // Lưu session mới cho lần renew
+                const newSessionId = 'yz' + Math.random().toString(36).substr(2, 10);
+                sessionStorage.setItem('yeumoney_session', newSessionId);
+                
+                // Chuyển hướng với tham số mới
+                const returnUrl = encodeURIComponent(
+                    `https://xfearyzer-verify.github.io/?session=${newSessionId}`
+                );
+                window.location.href = `https://yeumoney.com/go/SfSm2t3P?return_url=${returnUrl}`;
             });
         });
         
