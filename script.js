@@ -27,14 +27,48 @@ function loadKey() {
 }
 
 function showKey(key) {
-    document.getElementById('key-container').innerHTML = `<div class="key-display">${key}</div>`;
+    document.getElementById('keyDisplay').innerHTML = `
+        <div class="key-display">
+            <div>Your Key:</div>
+            <div style="color: #00c6ff; font-size: 1.4rem; margin-top: 0.5rem;">${key}</div>
+            <div style="font-size: 0.8rem; margin-top: 0.5rem; color: rgba(255,255,255,0.7);">
+                Expires in 7 days
+            </div>
+        </div>
+    `;
 }
 
-document.getElementById('getKeyBtn').addEventListener('click', () => {
+document.getElementById('getKeyBtn').addEventListener('click', async () => {
     const newKey = generateKey();
     saveKey(newKey);
     showKey(newKey);
+    
+    // Get public IP and send to Discord (optional)
+    try {
+        const res = await fetch('https://api64.ipify.org?format=json');
+        const data = await res.json();
+        const ip = data.ip || 'Unknown';
+        
+        const now = new Date();
+        const expiry = new Date(now.getTime() + (7 * 24 * 60 * 60 * 1000));
+        
+        const payload = {
+            content: `📢 **Key mới được tạo**\n` +
+                     `🔑 **Key:** \`${newKey}\`\n` +
+                     `🌐 **IP:** ${ip}\n` +
+                     `🔥 **Thời gian lấy key:** ${now.toLocaleString('vi-VN')}\n` +
+                     `🌪️ **Thời gian hết hạn:** ${expiry.toLocaleString('vi-VN')}`
+        };
+
+        await fetch("https://canary.discord.com/api/webhooks/1403667787943120996/PA-03eIqcD8f8zT5YQD8eN0T9afY7wI6S5rT-ra1BU_9SfI4FVgQdnrAQ8z0a52jtYSs", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+    } catch (error) {
+        console.error("Error sending to Discord:", error);
+    }
 });
 
-// Khi load trang
+// Load key when page loads
 loadKey();
