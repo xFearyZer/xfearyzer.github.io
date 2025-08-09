@@ -1,18 +1,26 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tool Rejoin Roblox</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tool Rejoin Roblox - Get Key</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Tool Rejoin Roblox</h1>
-        <div id="key-container">
-            <button id="getKeyBtn">Get Key</button>
-        </div>
+  <div class="container">
+    <h1>Tool Rejoin Roblox</h1>
+    <div id="keyArea">
+      <button id="getKeyBtn" class="big">Get Key</button>
+      <div id="keyDisplay" class="keyDisplay" style="display:none"></div>
     </div>
-    <script src="script.js"></script>
+    <div class="muted small" style="margin-top:12px">Key sẽ lưu 7 ngày trên thiết bị và trên server.</div>
+  </div>
+
+  <!-- Firebase (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+  <script src="firebase-config.js"></script>
+  <script src="user.js"></script>
 </body>
 </html>
