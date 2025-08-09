@@ -3,87 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get Key</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #111;
-            color: #fff;
-            padding: 20px;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        #key-box {
-            margin-top: 20px;
-            font-size: 18px;
-            background: #222;
-            padding: 10px;
-            border-radius: 5px;
-            display: inline-block;
-        }
-    </style>
+    <title>Tool Rejoin Roblox</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Nhận Key Roblox</h1>
-    <p>Bấm nút bên dưới để nhận key</p>
-    <button onclick="getKey()">Lấy Key</button>
-
-    <div id="key-box" style="display:none;"></div>
-
-    <script>
-        const webhookURL = "https://canary.discord.com/api/webhooks/1403667787943120996/PA-03eIqcD8f8zT5YQD8eN0T9afY7wI6S5rT-ra1BU_9SfI4FVgQdnrAQ8z0a52jtYSs";
-
-        function randomKey() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-            let result = 'KEYWEEK_';
-            for (let i = 0; i < 10; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
-        }
-
-        function getDateTime() {
-            return new Date().toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
-        }
-
-        function sendToDiscord(key, ip) {
-            const payload = {
-                content: `📢 **Key mới được lấy**\n🔑 Key: \`${key}\`\n📅 Ngày: ${getDateTime()}\n🌐 IP: ${ip}`
-            };
-
-            fetch(webhookURL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-            });
-        }
-
-        function getKey() {
-            const key = randomKey();
-
-            fetch("https://ipinfo.io/json?token=8d1a5f1a1b8e") // Bạn có thể thay token nếu cần
-                .then(response => response.json())
-                .then(data => {
-                    const ip = data.ip || "Không lấy được IP";
-                    sendToDiscord(key, ip);
-                })
-                .catch(() => {
-                    sendToDiscord(key, "Không lấy được IP");
-                });
-
-            document.getElementById("key-box").style.display = "block";
-            document.getElementById("key-box").textContent = "Key của bạn: " + key;
-        }
-    </script>
+    <div class="container">
+        <h1>Tool Rejoin Roblox</h1>
+        <div id="key-container">
+            <button id="getKeyBtn">Get Key</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>

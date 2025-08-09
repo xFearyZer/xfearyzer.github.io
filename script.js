@@ -1,43 +1,40 @@
-<?php
-// Lấy IP người dùng
-function getUserIP() {
-    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
-        return $_SERVER['HTTP_CLIENT_IP'];
-    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-        return explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0];
-    } else {
-        return $_SERVER['REMOTE_ADDR'];
-    }
-}
-
-// Tạo key chỉ gồm chữ in hoa và số
 function generateKey() {
-    $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $key = 'KEYWEEK_';
-    for ($i = 0; $i < 10; $i++) {
-        $key .= $chars[rand(0, strlen($chars) - 1)];
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let randomPart = '';
+    for (let i = 0; i < 10; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
     }
-    return $key;
+    return `KEY1WEEK_${randomPart}`;
 }
 
-$key = generateKey();
-$ip = getUserIP();
-$date = date('Y-m-d H:i:s');
+function saveKey(key) {
+    const now = new Date();
+    const expiry = now.getTime() + (7 * 24 * 60 * 60 * 1000); // 7 ngày
+    localStorage.setItem('userKey', key);
+    localStorage.setItem('keyExpiry', expiry);
+}
 
-// Gửi lên Discord webhook
-$webhookURL = "https://canary.discord.com/api/webhooks/1403667787943120996/PA-03eIqcD8f8zT5YQD8eN0T9afY7wI6S5rT-ra1BU_9SfI4FVgQdnrAQ8z0a52jtYSs";
-$data = [
-    "content" => "📢 **Người dùng vừa lấy key!**\n🔑 Key: `$key`\n📅 Thời gian: $date\n🌐 IP: $ip"
-];
-$options = [
-    'http' => [
-        'method' => 'POST',
-        'header' => "Content-Type: application/json",
-        'content' => json_encode($data)
-    ]
-];
-file_get_contents($webhookURL, false, stream_context_create($options));
+function loadKey() {
+    const savedKey = localStorage.getItem('userKey');
+    const expiry = localStorage.getItem('keyExpiry');
+    const now = new Date().getTime();
 
-// Hiển thị key ra web
-echo "<h1 style='font-family: Arial; text-align: center;'>$key</h1>";
-?>
+    if (savedKey && expiry && now < expiry) {
+        showKey(savedKey);
+        return true;
+    }
+    return false;
+}
+
+function showKey(key) {
+    document.getElementById('key-container').innerHTML = `<div class="key-display">${key}</div>`;
+}
+
+document.getElementById('getKeyBtn').addEventListener('click', () => {
+    const newKey = generateKey();
+    saveKey(newKey);
+    showKey(newKey);
+});
+
+// Khi load trang
+loadKey();
