@@ -6,43 +6,35 @@
     <title>Your Tool Key</title>
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .expiry-notice {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ff9800;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            animation: scrollText 15s linear infinite;
+            white-space: nowrap;
+        }
+        @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Your Tool Key</h1>
+        <h1>Your Tool License Key</h1>
         <div id="keyDisplay"></div>
-        <button id="renewKeyBtn">Generate New Key</button>
     </div>
 
+    <div class="expiry-notice" id="expiryNotice"></div>
+
     <script>
-        // ================= PHẦN KIỂM TRA BẢO MẬT =================
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('vt');
-        const sessionId = urlParams.get('session');
-        const timestamp = urlParams.get('ts');
-
-        // Kiểm tra nếu có tham số bảo mật
-        if (token && sessionId && timestamp) {
-            if (token !== localStorage.getItem('yt_verify_token') || 
-                sessionId !== sessionStorage.getItem('yeumoney_session') ||
-                (Date.now() - parseInt(timestamp)) > 300000) {
-                
-                clearAllData();
-                window.location.href = "https://xfearyzer.github.io?error=invalid_access";
-                return;
-            }
-            // Xóa token sau khi xác minh
-            localStorage.removeItem('yt_verify_token');
-        }
-
-        function clearAllData() {
-            localStorage.removeItem('yt_verify_token');
-            localStorage.removeItem('robloxKey');
-            localStorage.removeItem('awaitingVerification');
-            sessionStorage.removeItem('yeumoney_session');
-        }
-        // ============== HẾT PHẦN KIỂM TRA BẢO MẬT ==============
-
         // Hàm tạo key ngẫu nhiên
         function generateKey() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -50,48 +42,14 @@
             for (let i = 0; i < 10; i++) {
                 key += chars.charAt(Math.floor(Math.random() * chars.length));
             }
-            return `ROBLOX-${key}`;
+            return `TOOL-${key}`;
         }
 
-        // Xử lý khi trang load
-        document.addEventListener('DOMContentLoaded', function() {
-            const keyDisplay = document.getElementById('keyDisplay');
-            const renewBtn = document.getElementById('renewKeyBtn');
-            
-            // Kiểm tra key hiện có
-            const savedKey = localStorage.getItem('robloxKey');
-            const expiry = localStorage.getItem('keyExpiry');
-                
-            if (savedKey && expiry && new Date().getTime() < expiry) {
-                displayKey(savedKey, new Date(parseInt(expiry)));
-            } else {
-                // Nếu không có key hợp lệ, tạo key mới ngay lập tức
-                createNewKey();
-            }
-            
-            // Xử lý nút renew
-            renewBtn.addEventListener('click', function() {
-                createNewKey();
-            });
-        });
-
-        // Hàm tạo key mới
-        function createNewKey() {
-            const newKey = generateKey();
-            const expiryDate = new Date();
-            expiryDate.setDate(expiryDate.getDate() + 7); // 7 ngày
-            
-            localStorage.setItem('robloxKey', newKey);
-            localStorage.setItem('keyExpiry', expiryDate.getTime());
-            
-            displayKey(newKey, expiryDate);
-        }
-        
         // Hàm hiển thị key
         function displayKey(key, expiryDate) {
             const daysLeft = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
             
-            const keyDisplayHTML = `
+            document.getElementById('keyDisplay').innerHTML = `
                 <div class="key-value">${key}</div>
                 <div class="expiry-info">
                     Expires: ${expiryDate.toLocaleDateString()}
@@ -102,20 +60,51 @@
                 </button>
             `;
             
-            document.getElementById('keyDisplay').innerHTML = keyDisplayHTML;
-            
-            // Thêm sự kiện click sau khi nút đã được tạo
-            const copyBtn = document.getElementById('copyKeyBtn');
-            if (copyBtn) {
-                copyBtn.addEventListener('click', function() {
-                    navigator.clipboard.writeText(key).then(() => {
-                        alert('Key copied to clipboard!');
-                    }).catch(err => {
-                        console.error('Failed to copy key: ', err);
-                    });
-                });
-            }
+            // Xử lý nút copy
+            document.getElementById('copyKeyBtn').addEventListener('click', function() {
+                navigator.clipboard.writeText(key);
+                alert('Key copied to clipboard!');
+            });
+
+            // Hiển thị thông báo hết hạn
+            document.getElementById('expiryNotice').textContent = 
+                `This key will expire in ${daysLeft} days. After expiration, you will be automatically redirected to get a new key.`;
         }
+
+        // Xử lý khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedKey = localStorage.getItem('toolKey');
+            const expiry = localStorage.getItem('keyExpiry');
+            const now = new Date().getTime();
+            
+            // Kiểm tra key còn hạn
+            if (savedKey && expiry && now < expiry) {
+                displayKey(savedKey, new Date(parseInt(expiry)));
+                
+                // Tự động chuyển hướng khi hết hạn
+                setTimeout(function() {
+                    window.location.href = "https://xfearyzer.github.io";
+                }, expiry - now);
+            } 
+            else {
+                // Tạo key mới nếu không có hoặc đã hết hạn
+                const newKey = generateKey();
+                const expiryDate = new Date();
+                expiryDate.setDate(expiryDate.getDate() + 7); // 7 ngày
+                
+                localStorage.setItem('toolKey', newKey);
+                localStorage.setItem('keyExpiry', expiryDate.getTime());
+                
+                displayKey(newKey, expiryDate);
+                
+                // Tự động chuyển hướng khi hết hạn
+                setTimeout(function() {
+                    localStorage.removeItem('toolKey');
+                    localStorage.removeItem('keyExpiry');
+                    window.location.href = "https://xfearyzer.github.io";
+                }, 7 * 24 * 60 * 60 * 1000); // 7 ngày
+            }
+        });
     </script>
 </body>
 </html>
