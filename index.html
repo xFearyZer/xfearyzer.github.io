@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get License Key | Roblox Tool</title>
+    <title>Roblox Rejoin Tool - Get Key</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,39 +12,32 @@
         <div class="logo">
             <i class="fas fa-key"></i>
         </div>
-        <h1>Get License Key</h1>
-        <p class="subtitle">Complete verification to receive your 7-day key</p>
+        <h1>Roblox Rejoin Tool</h1>
+        <p class="subtitle">Get your 7-day license key</p>
         
-        <div id="key-container">
-            <button id="getKeyBtn">
-                <i class="fas fa-key"></i> Get Key Now
-            </button>
-        </div>
-
-        <div class="social-links">
-            <a href="https://discord.gg/9EXTUFYs" target="_blank" class="social-btn discord">
-                <i class="fab fa-discord"></i>
-            </a>
-            <a href="https://youtube.com/@zerxbp" target="_blank" class="social-btn youtube">
-                <i class="fab fa-youtube"></i>
-            </a>
-            <a href="https://facebook.com" target="_blank" class="social-btn facebook">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-        </div>
+        <button id="getKeyBtn">
+            <i class="fas fa-key"></i> Get Key Now
+        </button>
+        
+        <p class="note">You will be redirected to complete verification</p>
     </div>
 
-    <div id="redirectModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>Verification Required</h2>
-            <p>You will be redirected to complete a quick verification to get your key.</p>
-            <div class="modal-buttons">
-                <button id="confirmRedirect">Continue</button>
-                <button id="cancelRedirect">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('getKeyBtn').addEventListener('click', function() {
+            // Lưu trạng thái đang chờ xác minh
+            localStorage.setItem('awaitingVerification', 'true');
+            
+            // Chuyển đến link rút gọn YeuMoney
+            window.location.href = "https://yeumoney.com/go/SfSm2t3P";
+        });
+        
+        // Nếu đã có key hợp lệ thì chuyển thẳng đến trang key
+        const savedKey = localStorage.getItem('robloxKey');
+        const expiry = localStorage.getItem('keyExpiry');
+        
+        if (savedKey && expiry && new Date().getTime() < expiry) {
+            window.location.href = "https://xfearyzer-key.github.io";
+        }
+    </script>
 </body>
 </html>
