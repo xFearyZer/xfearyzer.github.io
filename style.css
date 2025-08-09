@@ -1,122 +1,148 @@
+/* Biến màu sắc chung */
 :root {
-    --primary: #00c6ff;
-    --secondary: #0072ff;
-    --dark-bg: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-    --card-bg: rgba(0, 0, 0, 0.3);
-    --text-light: #ffffff;
-    --text-muted: rgba(255, 255, 255, 0.7);
+  --primary-color: #4285f4;
+  --secondary-color: #34a853;
+  --danger-color: #ea4335;
+  --warning-color: #fbbc05;
+  --dark-color: #202124;
+  --light-color: #f8f9fa;
 }
 
+/* Reset và font chữ */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: var(--dark-bg);
-    color: var(--text-light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    line-height: 1.6;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  color: var(--dark-color);
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
+/* Layout chung */
 .container {
-    text-align: center;
-    background: var(--card-bg);
-    padding: 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }
 
-.logo {
-    font-size: 3rem;
-    color: var(--primary);
-    margin-bottom: 1rem;
-}
-
+/* Header */
 h1 {
-    margin: 0 0 0.5rem 0;
-    font-size: 2rem;
-    font-weight: 700;
-    background: linear-gradient(to right, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  color: var(--primary-color);
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
-.subtitle, .note {
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    font-size: 0.9rem;
-}
-
+/* Nút bấm */
 button {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 600;
-    margin: 0.5rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px;
+  font-weight: 600;
 }
 
 button:hover {
-    background: var(--secondary);
-    transform: translateY(-2px);
+  background-color: #3367d6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.key-display {
-    background: rgba(0, 0, 0, 0.2);
-    padding: 1.5rem;
-    border-radius: 10px;
-    margin: 1.5rem 0;
-    border-left: 4px solid var(--primary);
+button:active {
+  transform: translateY(0);
 }
 
-#keyValue {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary);
-    margin-bottom: 1rem;
-    word-break: break-all;
+button i {
+  margin-right: 8px;
 }
 
-#expiryInfo {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    margin-bottom: 1rem;
+/* Key display */
+.key-value {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--secondary-color);
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  word-break: break-all;
 }
 
+.expiry-info {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+
+/* Copy button */
 #copyKeyBtn {
-    background: #4CAF50;
+  background-color: var(--secondary-color);
 }
 
 #copyKeyBtn:hover {
-    background: #3e8e41;
+  background-color: #2d9249;
 }
 
+/* Renew button */
 #renewKeyBtn {
-    background: #FF9800;
+  background-color: var(--warning-color);
+  color: var(--dark-color);
 }
 
 #renewKeyBtn:hover {
-    background: #e68a00;
+  background-color: #e8ac04;
 }
 
-@media (max-width: 600px) {
-    .container {
-        padding: 1.5rem;
-    }
-    
-    h1 {
-        font-size: 1.5rem;
-    }
+/* Thông báo hết hạn */
+.expiry-notice {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--warning-color);
+  color: var(--dark-color);
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+  animation: scrollText 15s linear infinite;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+@keyframes scrollText {
+  0% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  .key-value {
+    font-size: 1.4rem;
+  }
+}
+
+/* Hiệu ứng fade in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  animation: fadeIn 0.5s ease-out;
 }
