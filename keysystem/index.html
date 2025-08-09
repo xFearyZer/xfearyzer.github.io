@@ -69,7 +69,7 @@
                 createNewKey();
             }
             
-            // Xử lý nút renew - tạo key mới ngay mà không qua Yeumoney
+            // Xử lý nút renew
             renewBtn.addEventListener('click', function() {
                 createNewKey();
             });
@@ -91,7 +91,7 @@
         function displayKey(key, expiryDate) {
             const daysLeft = Math.ceil((expiryDate - new Date()) / (1000 * 60 * 60 * 24));
             
-            document.getElementById('keyDisplay').innerHTML = `
+            const keyDisplayHTML = `
                 <div class="key-value">${key}</div>
                 <div class="expiry-info">
                     Expires: ${expiryDate.toLocaleDateString()}
@@ -102,10 +102,19 @@
                 </button>
             `;
             
-            document.getElementById('copyKeyBtn').addEventListener('click', function() {
-                navigator.clipboard.writeText(key);
-                alert('Key copied to clipboard!');
-            });
+            document.getElementById('keyDisplay').innerHTML = keyDisplayHTML;
+            
+            // Thêm sự kiện click sau khi nút đã được tạo
+            const copyBtn = document.getElementById('copyKeyBtn');
+            if (copyBtn) {
+                copyBtn.addEventListener('click', function() {
+                    navigator.clipboard.writeText(key).then(() => {
+                        alert('Key copied to clipboard!');
+                    }).catch(err => {
+                        console.error('Failed to copy key: ', err);
+                    });
+                });
+            }
         }
     </script>
 </body>
