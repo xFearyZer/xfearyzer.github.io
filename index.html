@@ -1,78 +1,18 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Tool Hub — Get Key & Safe Executor</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tool Rejoin Roblox</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
     <div class="container">
-      <h1>Tool Hub</h1>
-      <nav>
-        <a href="#get-key">Get Key Tool</a>
-        <a href="#executor">Executor (Safe)</a>
-      </nav>
+        <h1>Tool Rejoin Roblox</h1>
+        <div id="key-container">
+            <button id="getKeyBtn">Get Key</button>
+        </div>
     </div>
-  </header>
-
-  <main class="container">
-    <section id="get-key" class="card">
-      <h2>Get Key Tool</h2>
-      <p>Nhấn nút để tạo <strong>key thử nghiệm</strong> (chỉ dùng cho mục đích test nội bộ).</p>
-      <div class="form-row">
-        <input id="nameInput" placeholder="Tên hoặc email (tuỳ chọn)" />
-        <button id="generateKeyBtn">Generate Key</button>
-      </div>
-      <div class="result">
-        <label>Key:</label>
-        <code id="keyOutput">—</code>
-      </div>
-      <p class="muted">Lưu ý: key được tạo trên trình duyệt và không được gửi đi server (privately generated).</p>
-    </section>
-
-    <section id="executor" class="card">
-      <h2>Executor (Safe Sandbox)</h2>
-      <p>
-        Đây là môi trường **dùng để học**: soạn HTML/CSS/JS và chạy preview trong <em>iframe</em> riêng an toàn.
-        <strong>Mình không cung cấp hoặc hỗ trợ bất kỳ công cụ can thiệp/cheat vào game hay dịch vụ của bên thứ ba.</strong>
-      </p>
-
-      <div class="split">
-        <div class="editor">
-          <label>HTML</label>
-          <textarea id="htmlArea" placeholder="&lt;h1&gt;Hello&lt;/h1&gt;"></textarea>
-
-          <label>CSS</label>
-          <textarea id="cssArea" placeholder="body { font-family: Arial; }"></textarea>
-
-          <label>JS</label>
-          <textarea id="jsArea" placeholder="console.log('hello')"></textarea>
-
-          <div class="editor-actions">
-            <button id="runBtn">Run in Sandbox</button>
-            <button id="clearBtn" class="secondary">Clear</button>
-          </div>
-        </div>
-
-        <div class="preview">
-          <label>Preview</label>
-          <iframe id="previewFrame" sandbox="allow-scripts"></iframe>
-          <div class="muted small">Iframe sandbox chỉ cho phép scripts nội bộ — không truy cập mạng hay tài nguyên ngoài.</div>
-        </div>
-      </div>
-
-      <div class="warning">
-        <strong>Cảnh báo:</strong> Không dùng công cụ này để cố gắng can thiệp, cheat hay phá hoại dịch vụ của người khác. Việc đó có thể vi phạm luật và điều khoản dịch vụ.
-      </div>
-    </section>
-
-    <footer class="card small muted">
-      <p>Muốn mình tinh chỉnh giao diện hay thêm tính năng (ví dụ lưu key cục bộ, gửi email, hay theme tối)? Hãy nói yêu cầu cụ thể nhé.</p>
-    </footer>
-  </main>
-
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

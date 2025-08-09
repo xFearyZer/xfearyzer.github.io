@@ -1,54 +1,40 @@
-// Generate simple random key (UUID v4 style, client-side only)
-function generateKey(name){
-  return 'xxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c){
-    var r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
-    return v.toString(16);
-  }) + (name? '-' + encodeURIComponent(name).slice(0,12) : '');
+function generateKey() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let randomPart = '';
+    for (let i = 0; i < 10; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return `KEY1WEEK_${randomPart}`;
 }
 
-document.getElementById('generateKeyBtn').addEventListener('click', function(){
-  const name = document.getElementById('nameInput').value.trim();
-  const key = generateKey(name);
-  document.getElementById('keyOutput').textContent = key;
-});
-
-// Editor -> sandboxed iframe preview
-const runBtn = document.getElementById('runBtn');
-const clearBtn = document.getElementById('clearBtn');
-const preview = document.getElementById('previewFrame');
-
-function buildPreview(html, css, js){
-  return `<!doctype html>
-  <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width,initial-scale=1">
-      <style>${css}</style>
-    </head>
-    <body>
-      ${html}
-      <script>
-        try{
-          ${js}
-        }catch(e){
-          document.body.insertAdjacentHTML('beforeend','<pre style="color:red;">'+e.toString()+'</pre>');
-        }
-      <\/script>
-    </body>
-  </html>`;
+function saveKey(key) {
+    const now = new Date();
+    const expiry = now.getTime() + (7 * 24 * 60 * 60 * 1000); // 7 ngày
+    localStorage.setItem('userKey', key);
+    localStorage.setItem('keyExpiry', expiry);
 }
 
-runBtn.addEventListener('click', function(){
-  const html = document.getElementById('htmlArea').value;
-  const css  = document.getElementById('cssArea').value;
-  const js   = document.getElementById('jsArea').value;
-  const doc = buildPreview(html, css, js);
-  preview.srcdoc = doc;
+function loadKey() {
+    const savedKey = localStorage.getItem('userKey');
+    const expiry = localStorage.getItem('keyExpiry');
+    const now = new Date().getTime();
+
+    if (savedKey && expiry && now < expiry) {
+        showKey(savedKey);
+        return true;
+    }
+    return false;
+}
+
+function showKey(key) {
+    document.getElementById('key-container').innerHTML = `<div class="key-display">${key}</div>`;
+}
+
+document.getElementById('getKeyBtn').addEventListener('click', () => {
+    const newKey = generateKey();
+    saveKey(newKey);
+    showKey(newKey);
 });
 
-clearBtn.addEventListener('click', function(){
-  document.getElementById('htmlArea').value = '';
-  document.getElementById('cssArea').value = '';
-  document.getElementById('jsArea').value = '';
-  preview.srcdoc = '';
-});
+// Khi load trang
+loadKey();
