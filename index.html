@@ -4,22 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Roblox Rejoin Tool - Get Key</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <div class="logo">
-            <i class="fas fa-key"></i>
-        </div>
-        <h1>Roblox Rejoin Tool</h1>
-        <p class="subtitle">Get your 7-day license key</p>
-        
-        <button id="getKeyBtn">
-            <i class="fas fa-key"></i> Get Key Now
-        </button>
-        
-        <p class="note">You will be redirected to complete verification</p>
+        <h1>Get Your Roblox Key</h1>
+        <button id="getKeyBtn">Get Key Now</button>
     </div>
 
     <script>
@@ -29,15 +19,12 @@
             
             // Chuyển đến link rút gọn YeuMoney
             window.location.href = "https://yeumoney.com/go/SfSm2t3P";
+            
+            // Sau 5 giây tự động chuyển về trang key (giả lập)
+            setTimeout(function() {
+                window.location.href = "https://xfearyzer.github.io/keysystem/";
+            }, 5000);
         });
-        
-        // Nếu đã có key hợp lệ thì chuyển thẳng đến trang key
-        const savedKey = localStorage.getItem('robloxKey');
-        const expiry = localStorage.getItem('keyExpiry');
-        
-        if (savedKey && expiry && new Date().getTime() < expiry) {
-            window.location.href = "https://xfearyzer-key.github.io";
-        }
     </script>
 </body>
 </html>
