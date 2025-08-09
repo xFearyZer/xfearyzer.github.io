@@ -80,15 +80,21 @@
             
             // Xử lý nút renew
             renewBtn.addEventListener('click', function() {
+                // Đặt cờ awaitingVerification
+                localStorage.setItem('awaitingVerification', 'true');
+                
                 // Lưu session mới cho lần renew
                 const newSessionId = 'yz' + Math.random().toString(36).substr(2, 10);
                 sessionStorage.setItem('yeumoney_session', newSessionId);
                 
-                // Chuyển hướng với tham số mới
+                // Tạo timestamp mới
+                const newTimestamp = Date.now();
+                
+                // Chuyển hướng với tham số mới (đã đổi link Yeumoney)
                 const returnUrl = encodeURIComponent(
-                    `https://xfearyzer-verify.github.io/?session=${newSessionId}`
+                    `https://xfearyzer-verify.github.io/?session=${newSessionId}&ts=${newTimestamp}`
                 );
-                window.location.href = `https://yeumoney.com/go/SfSm2t3P?return_url=${returnUrl}`;
+                window.location.href = `https://yeumoney.com/3B-1F?return_url=${returnUrl}`;
             });
         });
         
