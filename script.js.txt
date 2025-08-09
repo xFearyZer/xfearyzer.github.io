@@ -1,0 +1,139 @@
+// Cấu hình chung
+const YEU_MONEY_LINK = "https://yeumoney.com/go/SfSm2t3P"; // Sử dụng link thực tế của bạn
+const WEBHOOK_URL = "https://canary.discord.com/api/webhooks/1403667787943120996/PA-03eIqcD8f8zT5YQD8eN0T9afY7wI6S5rT-ra1BU_9SfI4FVgQdnrAQ8z0a52jtYSs";
+const KEY_EXPIRY_DAYS = 7;
+
+// Hàm tạo key
+function generateKey() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let randomPart = '';
+    for (let i = 0; i < 10; i++) {
+        randomPart += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return `KEY${KEY_EXPIRY_DAYS}DAY_${randomPart}`;
+}
+
+// Hàm lưu key
+function saveKey(key) {
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + KEY_EXPIRY_DAYS);
+    localStorage.setItem('licenseKey', key);
+    localStorage.setItem('keyExpiry', expiryDate.getTime());
+}
+
+// Hàm kiểm tra key
+function loadKey() {
+    const key = localStorage.getItem('licenseKey');
+    const expiry = localStorage.getItem('keyExpiry');
+    const now = new Date().getTime();
+    
+    if (key && expiry && now < expiry) {
+        return key;
+    }
+    return null;
+}
+
+// Xử lý cho trang index.html
+if (document.getElementById('getKeyBtn')) {
+    const getKeyBtn = document.getElementById('getKeyBtn');
+    const redirectModal = document.getElementById('redirectModal');
+    const confirmRedirect = document.getElementById('confirmRedirect');
+    const cancelRedirect = document.getElementById('cancelRedirect');
+
+    getKeyBtn.addEventListener('click', () => {
+        redirectModal.classList.remove('hidden');
+    });
+
+    confirmRedirect.addEventListener('click', () => {
+        // Lưu trạng thái đang chờ xác minh
+        localStorage.setItem('pendingVerification', 'true');
+        
+        // Mở link YeuMoney trong tab mới
+        window.open(YEU_MONEY_LINK, '_blank');
+        
+        // Sau 5 giây kiểm tra và chuyển trang (giả lập)
+        setTimeout(() => {
+            if (confirm("Have you completed the verification?")) {
+                const newKey = generateKey();
+                saveKey(newKey);
+                window.location.href = "key.html";
+            }
+        }, 5000);
+    });
+
+    cancelRedirect.addEventListener('click', () => {
+        redirectModal.classList.add('hidden');
+    });
+}
+
+// Xử lý cho trang key.html
+if (document.getElementById('keyDisplay')) {
+    const keyDisplay = document.getElementById('keyDisplay');
+    const renewKeyBtn = document.getElementById('renewKeyBtn');
+    
+    // Hiển thị key
+    const currentKey = loadKey();
+    if (currentKey) {
+        keyDisplay.innerHTML = `
+            <div class="key-display">
+                <div>Your License Key:</div>
+                <div style="color: #00c6ff; font-size: 1.4rem; margin-top: 0.5rem;">${currentKey}</div>
+                <div style="font-size: 0.8rem; margin-top: 0.5rem; color: rgba(255,255,255,0.7);">
+                    Expires on ${new Date(parseInt(localStorage.getItem('keyExpiry'))).toLocaleDateString()}
+                </div>
+            </div>
+        `;
+        
+        // Gửi thông báo đến Discord khi key được xem
+        sendToDiscord(currentKey, "VIEWED");
+    } else {
+        window.location.href = "index.html";
+    }
+    
+    // Xử lý nút tạo lại key
+    renewKeyBtn.addEventListener('click', () => {
+        localStorage.setItem('pendingVerification', 'true');
+        window.open(YEU_MONEY_LINK, '_blank');
+        
+        // Giả lập xác nhận hoàn thành
+        setTimeout(() => {
+            if (confirm("Have you completed the verification?")) {
+                const newKey = generateKey();
+                saveKey(newKey);
+                window.location.reload();
+            }
+        }, 5000);
+    });
+}
+
+// Hàm gửi thông báo đến Discord
+async function sendToDiscord(key, action) {
+    try {
+        const ip = await getPublicIP();
+        const payload = {
+            content: `🔑 **Key ${action}**\n` +
+                     `**Key:** \`${key}\`\n` +
+                     `**IP:** ${ip}\n` +
+                     `**Time:** ${new Date().toLocaleString()}`
+        };
+        
+        await fetch(WEBHOOK_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+    } catch (error) {
+        console.error("Discord webhook error:", error);
+    }
+}
+
+// Hàm lấy địa chỉ IP
+async function getPublicIP() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch {
+        return "Unknown";
+    }
+}

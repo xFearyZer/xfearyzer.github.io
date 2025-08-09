@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Get License Key | Roblox Tool</title>
+    <title>Your License Key | Roblox Tool</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -12,12 +12,13 @@
         <div class="logo">
             <i class="fas fa-key"></i>
         </div>
-        <h1>Get License Key</h1>
-        <p class="subtitle">Complete verification to receive your 7-day key</p>
+        <h1>Your License Key</h1>
+        <p class="subtitle">7-day premium access</p>
         
         <div id="key-container">
-            <button id="getKeyBtn">
-                <i class="fas fa-key"></i> Get Key Now
+            <div id="keyDisplay"></div>
+            <button id="renewKeyBtn">
+                <i class="fas fa-sync-alt"></i> Generate New Key
             </button>
         </div>
 
@@ -31,17 +32,6 @@
             <a href="https://facebook.com" target="_blank" class="social-btn facebook">
                 <i class="fab fa-facebook-f"></i>
             </a>
-        </div>
-    </div>
-
-    <div id="redirectModal" class="modal hidden">
-        <div class="modal-content">
-            <h2>Verification Required</h2>
-            <p>You will be redirected to complete a quick verification to get your key.</p>
-            <div class="modal-buttons">
-                <button id="confirmRedirect">Continue</button>
-                <button id="cancelRedirect">Cancel</button>
-            </div>
         </div>
     </div>
 
