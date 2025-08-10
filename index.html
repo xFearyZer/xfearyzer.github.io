@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lựa Chọn Trang</title>
+    <title>Page Selection</title>
     <style>
         /* Reset và font chữ */
         * {
@@ -160,6 +160,87 @@
             transform: scale(1.5);
         }
         
+        /* Popup thông báo */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .popup {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+        
+        .popup-overlay.active .popup {
+            transform: translateY(0);
+        }
+        
+        .popup h2 {
+            color: #2c7be5;
+            margin-bottom: 15px;
+        }
+        
+        .popup p {
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .popup-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .popup-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .popup-btn.close-today {
+            background: #e0e0e0;
+            color: #333;
+        }
+        
+        .popup-btn.close-today:hover {
+            background: #d0d0d0;
+        }
+        
+        .popup-btn.close {
+            background: #2c7be5;
+            color: white;
+        }
+        
+        .popup-btn.close:hover {
+            background: #1a6bda;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .slides-container {
@@ -174,33 +255,86 @@
             h1 {
                 font-size: 2rem;
             }
+            
+            .popup {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Popup thông báo -->
+    <div class="popup-overlay" id="popup">
+        <div class="popup">
+            <h2>Welcome to Our Service</h2>
+            <p>Thank you for visiting our website. Please select one of the options below to continue. You can choose to hide this notification for today.</p>
+            <div class="popup-buttons">
+                <button class="popup-btn close-today" id="closeToday">Hide for today</button>
+                <button class="popup-btn close" id="closePopup">I understand</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Nội dung chính -->
     <div class="container">
-        <h1 class="floating">Chọn Trang Bạn Muốn Truy Cập</h1>
+        <h1 class="floating">Select Your Destination Page</h1>
         
         <div class="slides-container">
             <div class="slide" onclick="navigateTo('getkey.index')">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">🔑</div>
-                <h3 class="slide-title">Trang Get Key</h3>
-                <p class="slide-desc">Nhận khóa truy cập và thông tin đăng nhập hệ thống</p>
+                <h3 class="slide-title">Get Key Page</h3>
+                <p class="slide-desc">Get access keys and system login information</p>
             </div>
             
             <div class="slide" onclick="navigateTo('storage.index')">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">🗄️</div>
-                <h3 class="slide-title">Trang Storage</h3>
-                <p class="slide-desc">Quản lý kho lưu trữ dữ liệu và tài nguyên hệ thống</p>
+                <h3 class="slide-title">Storage Page</h3>
+                <p class="slide-desc">Manage data storage and system resources</p>
             </div>
         </div>
     </div>
     
     <script>
+        // Xử lý popup
+        const popup = document.getElementById('popup');
+        const closePopup = document.getElementById('closePopup');
+        const closeToday = document.getElementById('closeToday');
+        
+        // Kiểm tra cookie
+        function checkPopupCookie() {
+            const hidePopup = localStorage.getItem('hidePopup');
+            if (hidePopup) {
+                const today = new Date().toDateString();
+                if (hidePopup === today) {
+                    return false; // Không hiển thị popup
+                }
+            }
+            return true; // Hiển thị popup
+        }
+        
+        // Hiển thị popup nếu cần
+        if (checkPopupCookie()) {
+            setTimeout(() => {
+                popup.classList.add('active');
+            }, 500);
+        }
+        
+        // Đóng popup
+        closePopup.addEventListener('click', () => {
+            popup.classList.remove('active');
+        });
+        
+        // Tắt trong hôm nay
+        closeToday.addEventListener('click', () => {
+            const today = new Date().toDateString();
+            localStorage.setItem('hidePopup', today);
+            popup.classList.remove('active');
+        });
+        
+        // Chuyển trang
         function navigateTo(page) {
-            // Hiệu ứng chuyển trang
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
             
@@ -209,7 +343,7 @@
             }, 500);
         }
         
-        // Thêm hiệu ứng khi di chuột vào các slide
+        // Hiệu ứng hover slide
         document.querySelectorAll('.slide').forEach(slide => {
             slide.addEventListener('mouseenter', () => {
                 const icon = slide.querySelector('.slide-icon');
