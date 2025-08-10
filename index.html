@@ -386,6 +386,42 @@
             box-shadow: 0 5px 20px rgba(106, 90, 205, 0.5);
         }
         
+        /* Key Tool Selection Popup */
+        .key-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
+        
+        .key-option {
+            background: rgba(40, 40, 60, 0.6);
+            border: 1px solid rgba(106, 90, 205, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .key-option:hover {
+            background: rgba(60, 60, 90, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.2);
+            border-color: rgba(106, 90, 205, 0.5);
+        }
+        
+        .key-option-title {
+            font-size: 1.2rem;
+            color: #d0d0f0;
+            margin-bottom: 5px;
+        }
+        
+        .key-option-desc {
+            font-size: 0.9rem;
+            color: #a0a0c0;
+        }
+        
         /* Responsive */
         @media (max-width: 768px) {
             .slides-container {
@@ -441,12 +477,32 @@
         </div>
     </div>
     
+    <!-- Popup chọn Key Tool -->
+    <div class="popup-overlay" id="keyToolPopup">
+        <div class="popup">
+            <h2 id="keyToolPopupTitle">Get Free Key Tool</h2>
+            <div class="key-options">
+                <div class="key-option" onclick="navigateTo('keytool1.html')">
+                    <div class="key-option-title">Option 1</div>
+                    <div class="key-option-desc">Get key from source 1</div>
+                </div>
+                <div class="key-option" onclick="navigateTo('keytool2.html')">
+                    <div class="key-option-title">Option 2</div>
+                    <div class="key-option-desc">Get key from source 2</div>
+                </div>
+            </div>
+            <div class="popup-buttons" style="margin-top: 20px;">
+                <button class="popup-btn close" onclick="document.getElementById('keyToolPopup').classList.remove('active')">Back</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Nội dung chính -->
     <div class="container">
         <h1 class="floating" id="mainTitle">Advanced Toolkit</h1>
         
         <div class="slides-container">
-            <div class="slide" onclick="navigateTo('getkey.index')">
+            <div class="slide" onclick="showKeyToolPopup()">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">🔑</div>
                 <h3 class="slide-title" id="slide1Title">Key Tool</h3>
@@ -502,6 +558,11 @@
             });
         }
         
+        // Hiển thị popup Key Tool
+        function showKeyToolPopup() {
+            document.getElementById('keyToolPopup').classList.add('active');
+        }
+        
         // Đối tượng chứa các ngôn ngữ
         const languages = {
             en: {
@@ -513,7 +574,12 @@
                 slide1Title: "Key Tool",
                 slide1Desc: "Premium key generation and rejoin system",
                 slide2Title: "Client/Executor",
-                slide2Desc: "Advanced client management tools"
+                slide2Desc: "Advanced client management tools",
+                keyToolPopupTitle: "Get Free Key Tool",
+                keyOption1Title: "Option 1",
+                keyOption1Desc: "Get key from source 1",
+                keyOption2Title: "Option 2",
+                keyOption2Desc: "Get key from source 2"
             },
             vi: {
                 popupTitle: "Chào mừng đến với Bộ Công Cụ Nâng Cao",
@@ -524,7 +590,12 @@
                 slide1Title: "Công Cụ Key",
                 slide1Desc: "Hệ thống tạo key và rejoin cao cấp",
                 slide2Title: "Client/Executor",
-                slide2Desc: "Công cụ quản lý client nâng cao"
+                slide2Desc: "Công cụ quản lý client nâng cao",
+                keyToolPopupTitle: "Lấy Key Tool Miễn Phí",
+                keyOption1Title: "Lựa chọn 1",
+                keyOption1Desc: "Lấy key từ nguồn 1",
+                keyOption2Title: "Lựa chọn 2",
+                keyOption2Desc: "Lấy key từ nguồn 2"
             }
         };
         
@@ -538,7 +609,12 @@
             slide1Title: document.getElementById('slide1Title'),
             slide1Desc: document.getElementById('slide1Desc'),
             slide2Title: document.getElementById('slide2Title'),
-            slide2Desc: document.getElementById('slide2Desc')
+            slide2Desc: document.getElementById('slide2Desc'),
+            keyToolPopupTitle: document.getElementById('keyToolPopupTitle'),
+            keyOption1Title: document.querySelectorAll('.key-option-title')[0],
+            keyOption1Desc: document.querySelectorAll('.key-option-desc')[0],
+            keyOption2Title: document.querySelectorAll('.key-option-title')[1],
+            keyOption2Desc: document.querySelectorAll('.key-option-desc')[1]
         };
         
         // Nút chuyển ngôn ngữ
