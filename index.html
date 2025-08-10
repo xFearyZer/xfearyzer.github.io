@@ -1,791 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Toolkit</title>
-    <style>
-        /* Reset và font chữ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background-color: #0a0a12;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-        
-        /* Gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, #1a1a2e 0%, #0a0a12 70%);
-            z-index: -2;
-        }
-        
-        /* Language switcher */
-        .language-switcher {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 30px;
-            background-color: rgba(10, 10, 18, 0.8);
-            z-index: 100;
-            position: relative;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(90, 90, 120, 0.2);
-        }
-        
-        .language-btn {
-            background: none;
-            border: 1px solid #6a5acd;
-            color: #b8b8d0;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-        
-        .language-btn:hover {
-            background-color: #6a5acd;
-            color: white;
-        }
-        
-        .language-btn.active {
-            background-color: #6a5acd;
-            color: white;
-            box-shadow: 0 0 10px rgba(106, 90, 205, 0.5);
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 20px;
-            text-align: center;
-            margin: auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        h1 {
-            color: #b8b8d0;
-            margin-bottom: 40px;
-            font-size: 2.8rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #6a5acd, transparent);
-        }
-        
-        .slides-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 50px;
-            flex-wrap: wrap;
-        }
-        
-        .slide {
-            width: 380px;
-            height: 280px;
-            background: rgba(20, 20, 35, 0.6);
-            border-radius: 10px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 30px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(90, 90, 120, 0.1);
-            backdrop-filter: blur(5px);
-        }
-        
-        .slide:hover {
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 15px 40px rgba(106, 90, 205, 0.4);
-            border-color: rgba(106, 90, 205, 0.3);
-            background: rgba(30, 30, 50, 0.7);
-        }
-        
-        .slide::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #6a5acd, #9370db);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.6s ease;
-        }
-        
-        .slide:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .slide-icon {
-            font-size: 70px;
-            margin-bottom: 25px;
-            color: #9370db;
-            transition: all 0.5s ease;
-            filter: drop-shadow(0 5px 10px rgba(106, 90, 205, 0.4));
-        }
-        
-        .slide:hover .slide-icon {
-            transform: scale(1.15) rotate(10deg);
-            filter: drop-shadow(0 8px 15px rgba(106, 90, 205, 0.6));
-        }
-        
-        .slide-title {
-            font-size: 1.6rem;
-            margin-bottom: 15px;
-            color: #d0d0f0;
-            transition: all 0.3s ease;
-            position: relative;
-            font-weight: 500;
-        }
-        
-        .slide:hover .slide-title {
-            transform: translateY(-5px);
-            color: white;
-        }
-        
-        .slide-title::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #6a5acd, #9370db);
-            transition: width 0.4s ease;
-        }
-        
-        .slide:hover .slide-title::after {
-            width: 60%;
-        }
-        
-        .slide-desc {
-            color: #a0a0c0;
-            font-size: 1rem;
-            line-height: 1.6;
-            transition: all 0.3s ease;
-        }
-        
-        .slide:hover .slide-desc {
-            transform: translateY(5px);
-            color: #c0c0e0;
-        }
-        
-        /* Hiệu ứng nền động */
-        .bg-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            background-color: rgba(106, 90, 205, 0.1);
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
-        }
-        
-        /* Hiệu ứng ánh sáng */
-        .light-effect {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(106, 90, 205, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
-            transition: transform 0.1s ease;
-        }
-        
-        /* Hiệu ứng động */
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-20px) rotate(3deg);
-            }
-        }
-        
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        /* Hiệu ứng khi load trang */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .slide {
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards;
-        }
-        
-        .slide:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-        
-        .slide:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-        
-        /* Hiệu ứng sóng khi hover */
-        .slide-effect {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background: radial-gradient(circle, rgba(106, 90, 205, 0.15) 0%, transparent 70%);
-            opacity: 0;
-            border-radius: 50%;
-            transform: scale(0);
-            transition: all 0.8s ease;
-            pointer-events: none;
-        }
-        
-        .slide:hover .slide-effect {
-            opacity: 1;
-            transform: scale(2);
-        }
-        
-        /* Popup thông báo */
-        .popup-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-        
-        .popup-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .popup {
-            background: rgba(20, 20, 35, 0.95);
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-            position: relative;
-            transform: translateY(30px);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(106, 90, 205, 0.2);
-        }
-        
-        .popup-overlay.active .popup {
-            transform: translateY(0);
-        }
-        
-        .popup h2 {
-            color: #d0d0f0;
-            margin-bottom: 15px;
-            font-weight: 400;
-        }
-        
-        .popup p {
-            margin-bottom: 25px;
-            line-height: 1.6;
-            color: #a0a0c0;
-        }
-        
-        .popup-buttons {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-        
-        .popup-btn {
-            padding: 10px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .popup-btn.close-today {
-            background: rgba(60, 60, 80, 0.5);
-            color: #c0c0e0;
-            border: 1px solid rgba(90, 90, 120, 0.3);
-        }
-        
-        .popup-btn.close-today:hover {
-            background: rgba(70, 70, 90, 0.7);
-        }
-        
-        .popup-btn.close {
-            background: linear-gradient(90deg, #6a5acd, #9370db);
-            color: white;
-            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
-        }
-        
-        .popup-btn.close:hover {
-            background: linear-gradient(90deg, #5a4acd, #8360db);
-            box-shadow: 0 5px 20px rgba(106, 90, 205, 0.5);
-        }
-        
-        /* Key Tool Selection Popup */
-        .key-options {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-        }
-        
-        .key-option {
-            background: rgba(40, 40, 60, 0.6);
-            border: 1px solid rgba(106, 90, 205, 0.3);
-            border-radius: 8px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-        
-        .key-option:hover {
-            background: rgba(60, 60, 90, 0.8);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.2);
-            border-color: rgba(106, 90, 205, 0.5);
-        }
-        
-        .key-option-title {
-            font-size: 1.2rem;
-            color: #d0d0f0;
-            margin-bottom: 5px;
-        }
-        
-        .key-option-desc {
-            font-size: 0.9rem;
-            color: #a0a0c0;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            .slides-container {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .slide {
-                width: 90%;
-                height: 250px;
-            }
-            
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .popup {
-                padding: 20px;
-            }
-            
-            .language-switcher {
-                justify-content: center;
-                padding: 10px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced Toolkit</title>
+<style>
+/* Toàn bộ CSS như bản bạn gửi + thêm style logo option */
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+body{background-color:#0a0a12;color:#e0e0e0;min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden;}
+.bg-gradient{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 20% 30%,#1a1a2e 0%,#0a0a12 70%);z-index:-2;}
+.language-switcher{display:flex;justify-content:flex-end;padding:15px 30px;background-color:rgba(10,10,18,0.8);z-index:100;position:relative;backdrop-filter:blur(10px);border-bottom:1px solid rgba(90,90,120,0.2);}
+.language-btn{background:none;border:1px solid #6a5acd;color:#b8b8d0;padding:5px 15px;border-radius:20px;cursor:pointer;margin-left:10px;font-size:.9rem;transition:all .3s ease;}
+.language-btn:hover{background-color:#6a5acd;color:white;}
+.language-btn.active{background-color:#6a5acd;color:white;box-shadow:0 0 10px rgba(106,90,205,0.5);}
+.container{width:100%;max-width:1200px;padding:20px;text-align:center;margin:auto;flex:1;display:flex;flex-direction:column;justify-content:center;}
+h1{color:#b8b8d0;margin-bottom:40px;font-size:2.8rem;font-weight:300;text-transform:uppercase;letter-spacing:2px;position:relative;display:inline-block;}
+h1::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);width:100px;height:2px;background:linear-gradient(90deg,transparent,#6a5acd,transparent);}
+.slides-container{display:flex;justify-content:center;gap:30px;margin-top:50px;flex-wrap:wrap;}
+.slide{width:380px;height:280px;background:rgba(20,20,35,0.6);border-radius:10px;box-shadow:0 8px 32px rgba(0,0,0,0.3);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:30px;cursor:pointer;transition:all .4s cubic-bezier(0.175,0.885,0.32,1.275);position:relative;overflow:hidden;border:1px solid rgba(90,90,120,0.1);backdrop-filter:blur(5px);}
+.slide:hover{transform:translateY(-15px) scale(1.03);box-shadow:0 15px 40px rgba(106,90,205,0.4);border-color:rgba(106,90,205,0.3);background:rgba(30,30,50,0.7);}
+.slide::before{content:'';position:absolute;top:0;left:0;width:100%;height:4px;background:linear-gradient(90deg,#6a5acd,#9370db);transform:scaleX(0);transform-origin:left;transition:transform .6s ease;}
+.slide:hover::before{transform:scaleX(1);}
+.slide-icon{font-size:70px;margin-bottom:25px;color:#9370db;transition:all .5s ease;filter:drop-shadow(0 5px 10px rgba(106,90,205,0.4));}
+.slide:hover .slide-icon{transform:scale(1.15) rotate(10deg);filter:drop-shadow(0 8px 15px rgba(106,90,205,0.6));}
+.slide-title{font-size:1.6rem;margin-bottom:15px;color:#d0d0f0;transition:all .3s ease;position:relative;font-weight:500;}
+.slide:hover .slide-title{transform:translateY(-5px);color:white;}
+.slide-title::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);width:0;height:2px;background:linear-gradient(90deg,#6a5acd,#9370db);transition:width .4s ease;}
+.slide:hover .slide-title::after{width:60%;}
+.slide-desc{color:#a0a0c0;font-size:1rem;line-height:1.6;transition:all .3s ease;}
+.slide:hover .slide-desc{transform:translateY(5px);color:#c0c0e0;}
+.bg-particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden;}
+.particle{position:absolute;background-color:rgba(106,90,205,0.1);border-radius:50%;pointer-events:none;box-shadow:0 0 10px rgba(106,90,205,0.3);}
+.light-effect{position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(106,90,205,0.1) 0%,transparent 70%);pointer-events:none;z-index:-1;transition:transform .1s ease;}
+.key-options{display:flex;flex-direction:column;gap:15px;width:100%;}
+.key-option{background:rgba(40,40,60,0.6);border:1px solid rgba(106,90,205,0.3);border-radius:8px;padding:15px;cursor:pointer;transition:all .3s ease;text-align:center;display:flex;flex-direction:column;align-items:center;}
+.key-option:hover{background:rgba(60,60,90,0.8);transform:translateY(-3px);box-shadow:0 5px 15px rgba(106,90,205,0.2);border-color:rgba(106,90,205,0.5);}
+.key-option img{width:120px;height:auto;margin-bottom:10px;border-radius:8px;}
+.key-option-title{font-size:1.2rem;color:#d0d0f0;margin-bottom:5px;}
+.key-option-desc{font-size:.9rem;color:#a0a0c0;}
+.popup-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;justify-content:center;align-items:center;z-index:1000;opacity:0;visibility:hidden;transition:all .3s ease;backdrop-filter:blur(10px);}
+.popup-overlay.active{opacity:1;visibility:visible;}
+.popup{background:rgba(20,20,35,0.95);padding:30px;border-radius:15px;width:90%;max-width:500px;box-shadow:0 10px 30px rgba(0,0,0,0.4);position:relative;border:1px solid rgba(106,90,205,0.2);}
+.popup h2{color:#d0d0f0;margin-bottom:15px;}
+</style>
 </head>
 <body>
-    <!-- Gradient background -->
-    <div class="bg-gradient"></div>
-    
-    <!-- Hiệu ứng nền particles -->
-    <div class="bg-particles" id="particles"></div>
-    
-    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
-    <div class="light-effect" id="lightEffect"></div>
-    
-    <!-- Language switcher -->
-    <div class="language-switcher">
-        <button class="language-btn active" id="enBtn">English</button>
-        <button class="language-btn" id="viBtn">Tiếng Việt</button>
-    </div>
-    
-    <!-- Popup thông báo -->
-    <div class="popup-overlay" id="popup">
-        <div class="popup">
-            <h2 id="popupTitle">Welcome to Advanced Toolkit</h2>
-            <p id="popupMessage">Thank you for accessing our premium tools. Please select your desired module below. This notification can be hidden for today.</p>
-            <div class="popup-buttons">
-                <button class="popup-btn close-today" id="closeToday">Hide for today</button>
-                <button class="popup-btn close" id="closePopup">Continue</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Popup chọn Key Tool -->
-    
-    <!-- Popup chọn Key Tool (bảo mật token + countdown) -->
-    <div class="popup-overlay" id="keyToolPopup">
-        <div class="popup">
-            <h2 id="keyToolPopupTitle">Get Key Tool — Warning</h2>
-            <p id="keyToolPopupMessage">Bạn sắp vượt link sang trang Key Tool. Hệ thống sẽ tạo một <strong>token tạm thời</strong> có hiệu lực <span id="durationLabel">20 phút</span>. Token sẽ được gửi kèm trong đường dẫn.</p>
-            <div style="margin-top:10px;">
-                <div style="font-weight:600;">Thời gian còn lại để chuyển: <span id="popupCountdown">--:--</span></div>
-                <div style="font-size:0.9rem;color:rgba(255,255,255,0.7);margin-top:8px;">Lưu ý: Sau khi vào trang Key Tool, key sẽ được tạo một lần và <strong>không thể tạo thêm</strong>. Nếu làm mới trang (reload) bạn sẽ mất key — hãy lưu lại trước khi reload.</div>
-            </div>
-            <div class="popup-buttons" style="margin-top:20px;">
-                <button class="popup-btn close" onclick="closeKeyToolPopup()">Back</button>
-                <button class="popup-btn close-today" id="continueBtn" onclick="continueToKeyTool()">Tiếp tục</button>
-            </div>
-        </div>
-    </div>
+<div class="bg-gradient"></div>
+<div class="bg-particles" id="particles"></div>
+<div class="light-effect" id="lightEffect"></div>
 
-            <div class="popup-buttons" style="margin-top: 20px;">
-                <button class="popup-btn close" onclick="document.getElementById('keyToolPopup').classList.remove('active')">Back</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Nội dung chính -->
-    <div class="container">
-        <h1 class="floating" id="mainTitle">Advanced Toolkit</h1>
-        
-        <div class="slides-container">
-            <div class="slide" onclick="showKeyToolPopup()">
-                <div class="slide-effect"></div>
-                <div class="slide-icon">🔑</div>
-                <h3 class="slide-title" id="slide1Title">Key Tool</h3>
-                <p class="slide-desc" id="slide1Desc">Premium key generation and rejoin system</p>
-            </div>
-            
-            <div class="slide" onclick="navigateTo('storage.index')">
-                <div class="slide-effect"></div>
-                <div class="slide-icon">💻</div>
-                <h3 class="slide-title" id="slide2Title">Client/Executor</h3>
-                <p class="slide-desc" id="slide2Desc">Advanced client management tools</p>
-            </div>
-        </div>
-    </div>
-    
-    <script>
-        // Tạo hiệu ứng particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = window.innerWidth < 768 ? 15 : 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random kích thước
-                const size = Math.random() * 15 + 5;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random vị trí
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random opacity
-                particle.style.opacity = Math.random() * 0.2 + 0.1;
-                
-                // Random animation
-                const duration = Math.random() * 20 + 10;
-                const delay = Math.random() * 5;
-                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-        
-        // Hiệu ứng ánh sáng di chuyển theo chuột
-        function setupLightEffect() {
-            const light = document.getElementById('lightEffect');
-            document.addEventListener('mousemove', (e) => {
-                light.style.left = `${e.clientX - 150}px`;
-                light.style.top = `${e.clientY - 150}px`;
-            });
-        }
-        
-        // Hiển thị popup Key Tool
-        function showKeyToolPopup() { openKeyToolPopup(); }
-        
-        // Đối tượng chứa các ngôn ngữ
-        const languages = {
-            en: {
-                popupTitle: "Welcome to Advanced Toolkit",
-                popupMessage: "Thank you for accessing our premium tools. Please select your desired module below. This notification can be hidden for today.",
-                closeToday: "Hide for today",
-                closePopup: "Continue",
-                mainTitle: "Advanced Toolkit",
-                slide1Title: "Key Tool",
-                slide1Desc: "Premium key generation and rejoin system",
-                slide2Title: "Client/Executor",
-                slide2Desc: "Advanced client management tools",
-                keyToolPopupTitle: "Get Free Key Tool",
-                keyOption1Title: "Option 1",
-                keyOption1Desc: "Get key from source 1",
-                keyOption2Title: "Option 2",
-                keyOption2Desc: "Get key from source 2"
-            },
-            vi: {
-                popupTitle: "Chào mừng đến với Bộ Công Cụ Nâng Cao",
-                popupMessage: "Cảm ơn bạn đã truy cập vào hệ thống công cụ cao cấp của chúng tôi. Vui lòng chọn module bạn muốn sử dụng. Bạn có thể ẩn thông báo này trong hôm nay.",
-                closeToday: "Ẩn hôm nay",
-                closePopup: "Tiếp tục",
-                mainTitle: "Bộ Công Cụ Nâng Cao",
-                slide1Title: "Công Cụ Key",
-                slide1Desc: "Hệ thống tạo key và rejoin cao cấp",
-                slide2Title: "Client/Executor",
-                slide2Desc: "Công cụ quản lý client nâng cao",
-                keyToolPopupTitle: "Lấy Key Tool Miễn Phí",
-                keyOption1Title: "Lựa chọn 1",
-                keyOption1Desc: "Lấy key từ nguồn 1",
-                keyOption2Title: "Lựa chọn 2",
-                keyOption2Desc: "Lấy key từ nguồn 2"
-            }
-        };
-        
-        // Các phần tử cần thay đổi ngôn ngữ
-        const elements = {
-            popupTitle: document.getElementById('popupTitle'),
-            popupMessage: document.getElementById('popupMessage'),
-            closeToday: document.getElementById('closeToday'),
-            closePopup: document.getElementById('closePopup'),
-            mainTitle: document.getElementById('mainTitle'),
-            slide1Title: document.getElementById('slide1Title'),
-            slide1Desc: document.getElementById('slide1Desc'),
-            slide2Title: document.getElementById('slide2Title'),
-            slide2Desc: document.getElementById('slide2Desc'),
-            keyToolPopupTitle: document.getElementById('keyToolPopupTitle'),
-            keyOption1Title: document.querySelectorAll('.key-option-title')[0],
-            keyOption1Desc: document.querySelectorAll('.key-option-desc')[0],
-            keyOption2Title: document.querySelectorAll('.key-option-title')[1],
-            keyOption2Desc: document.querySelectorAll('.key-option-desc')[1]
-        };
-        
-        // Nút chuyển ngôn ngữ
-        const enBtn = document.getElementById('enBtn');
-        const viBtn = document.getElementById('viBtn');
-        
-        // Chuyển đổi ngôn ngữ
-        function changeLanguage(lang) {
-            // Cập nhật nút active
-            enBtn.classList.toggle('active', lang === 'en');
-            viBtn.classList.toggle('active', lang === 'vi');
-            
-            // Cập nhật nội dung
-            for (const [key, element] of Object.entries(elements)) {
-                if (element) {
-                    element.textContent = languages[lang][key];
-                }
-            }
-            
-            // Lưu ngôn ngữ vào localStorage
-            localStorage.setItem('language', lang);
-        }
-        
-        // Sự kiện click nút
-        enBtn.addEventListener('click', () => changeLanguage('en'));
-        viBtn.addEventListener('click', () => changeLanguage('vi'));
-        
-        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
-        function detectLanguage() {
-            const savedLang = localStorage.getItem('language');
-            if (savedLang) return savedLang;
-            
-            const browserLang = navigator.language || navigator.userLanguage;
-            return browserLang.startsWith('vi') ? 'vi' : 'en';
-        }
-        
-        // Áp dụng ngôn ngữ khi tải trang
-        window.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            setupLightEffect();
-            const lang = detectLanguage();
-            changeLanguage(lang);
-            
-            // Hiển thị popup nếu cần
-            if (checkPopupCookie()) {
-                setTimeout(() => {
-                    document.getElementById('popup').classList.add('active');
-                }, 800);
-            }
-        });
-        
-        // Xử lý popup
-        const popup = document.getElementById('popup');
-        const closePopup = document.getElementById('closePopup');
-        const closeToday = document.getElementById('closeToday');
-        
-        // Kiểm tra cookie popup
-        function checkPopupCookie() {
-            const hidePopup = localStorage.getItem('hidePopup');
-            if (hidePopup) {
-                const today = new Date().toDateString();
-                if (hidePopup === today) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        
-        // Đóng popup
-        closePopup.addEventListener('click', () => {
-            popup.classList.remove('active');
-        });
-        
-        // Tắt trong hôm nay
-        closeToday.addEventListener('click', () => {
-            const today = new Date().toDateString();
-            localStorage.setItem('hidePopup', today);
-            popup.classList.remove('active');
-        });
-        
-        // Chuyển trang
-        function navigateTo(page) {
-            document.body.style.opacity = '0';
-            document.body.style.transition = 'opacity 0.5s ease';
-            
-            setTimeout(() => {
-                window.location.href = page;
-            }, 500);
-        }
-        
-        // Hiệu ứng hover slide
-        document.querySelectorAll('.slide').forEach(slide => {
-            slide.addEventListener('mouseenter', () => {
-                const icon = slide.querySelector('.slide-icon');
-                icon.style.transform = 'scale(1.15) rotate(10deg)';
-            });
-            
-            slide.addEventListener('mouseleave', () => {
-                const icon = slide.querySelector('.slide-icon');
-                icon.style.transform = 'scale(1) rotate(0)';
-            });
-        });
-    
-// ====== TOKEN + COUNTDOWN for Key Tool (GitHub Page) ======
-// Default token duration (ms). Bạn có thể chỉnh ở đây.
-const TOKEN_DURATION_MS = 20 * 60 * 1000; // 20 phút
+<div class="language-switcher">
+<button class="language-btn active" id="enBtn">English</button>
+<button class="language-btn" id="viBtn">Tiếng Việt</button>
+</div>
 
-let _tokenData = { token: null, exp: 0 };
-let _popupInterval = null;
+<!-- Popup chọn Key Tool -->
+<div class="popup-overlay" id="keyToolPopup">
+<div class="popup">
+<h2 id="keyToolPopupTitle">Get Free Key Tool</h2>
+<p>Token valid <span id="durationLabel">20 minutes</span>. Countdown: <span id="popupCountdown">--:--</span></p>
+<div class="key-options">
+<div class="key-option" onclick="continueToKeyTool('option1')">
+<img src="<!-- URL_LOGO_YEUMONEY -->" alt="Yeumoney">
+<div class="key-option-title">Option 1</div>
+<div class="key-option-desc">Get key from Yeumoney</div>
+</div>
+<div class="key-option" onclick="continueToKeyTool('option2')">
+<img src="<!-- URL_LOGO_LOOTLAB -->" alt="LootLab">
+<div class="key-option-title">Option 2</div>
+<div class="key-option-desc">Get key from LootLab</div>
+</div>
+</div>
+<div style="margin-top:15px;text-align:right;">
+<button class="language-btn" onclick="closeKeyToolPopup()">Back</button>
+</div>
+</div>
+</div>
 
-function openKeyToolPopup() {
-    // Generate token on opening the popup and start countdown
-    generateToken();
-    document.getElementById('keyToolPopup').classList.add('active');
-}
+<div class="container">
+<h1 class="floating" id="mainTitle">Advanced Toolkit</h1>
+<div class="slides-container">
+<div class="slide" onclick="openKeyToolPopup()">
+<div class="slide-icon">🔑</div>
+<h3 class="slide-title" id="slide1Title">Key Tool</h3>
+<p class="slide-desc" id="slide1Desc">Premium key generation</p>
+</div>
+</div>
+</div>
 
-function closeKeyToolPopup() {
-    document.getElementById('keyToolPopup').classList.remove('active');
-    stopTokenCountdown();
-}
+<script>
+// Particles
+function createParticles(){const p=document.getElementById('particles');for(let i=0;i<20;i++){const e=document.createElement('div');e.classList.add('particle');const s=Math.random()*15+5;e.style.width=`${s}px`;e.style.height=`${s}px`;e.style.left=`${Math.random()*100}%`;e.style.top=`${Math.random()*100}%`;p.appendChild(e);}}
+function setupLightEffect(){const l=document.getElementById('lightEffect');document.addEventListener('mousemove',e=>{l.style.left=`${e.clientX-150}px`;l.style.top=`${e.clientY-150}px`;});}
 
-// Tạo token ngẫu nhiên và set expiry
-function generateToken() {
-    _tokenData.token = Math.random().toString(36).substring(2, 14); // token ngẫu nhiên
-    _tokenData.exp = Date.now() + TOKEN_DURATION_MS;
-    updatePopupCountdown();
-    startTokenCountdown();
-}
-
-// Khi user bấm Tiếp tục -> redirect sang Netlify kèm token & exp
-function continueToKeyTool() {
-    if (!_tokenData.token || !_tokenData.exp) {
-        generateToken();
-    }
-    const url = new URL('https://xfearyzer-keysystem.netlify.app');
-    url.searchParams.set('token', _tokenData.token);
-    url.searchParams.set('exp', _tokenData.exp.toString());
-    // close popup and redirect
-    stopTokenCountdown();
-    window.location.href = url.toString();
-}
-
-// Countdown update
-function updatePopupCountdown() {
-    const el = document.getElementById('popupCountdown');
-    const rem = _tokenData.exp - Date.now();
-    if (rem <= 0) {
-        // token hết hạn trước khi user bấm -> tự động tạo token mới và reset countdown
-        generateToken();
-        return;
-    }
-    const mm = Math.floor(rem / 60000);
-    const ss = Math.floor((rem % 60000) / 1000);
-    el.textContent = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
-    const dur = Math.floor(TOKEN_DURATION_MS/60000);
-    const labelEl = document.getElementById('durationLabel');
-    if (labelEl) labelEl.textContent = `${dur} phút`;
-}
-
-function startTokenCountdown() {
-    stopTokenCountdown();
-    _popupInterval = setInterval(updatePopupCountdown, 1000);
-}
-
-function stopTokenCountdown() {
-    if (_popupInterval) { clearInterval(_popupInterval); _popupInterval = null; }
-}
-
-// Nếu người nhấn keyToolSlide, dùng hàm showKeyToolPopup (đã được thay bằng openKeyToolPopup wrapper)
+const TOKEN_DURATION_MS=20*60*1000;
+let _tokenData={token:null,exp:0},_popupInterval=null;
+function openKeyToolPopup(){generateToken();document.getElementById('keyToolPopup').classList.add('active');}
+function closeKeyToolPopup(){document.getElementById('keyToolPopup').classList.remove('active');stopTokenCountdown();}
+function generateToken(){_tokenData.token=Math.random().toString(36).substring(2,14);_tokenData.exp=Date.now()+TOKEN_DURATION_MS;updatePopupCountdown();startTokenCountdown();}
+function continueToKeyTool(opt){const url=new URL('https://xfearyzer-keysystem.netlify.app');url.searchParams.set('token',_tokenData.token);url.searchParams.set('exp',_tokenData.exp);url.searchParams.set('source',opt);stopTokenCountdown();window.location.href=url;}
+function updatePopupCountdown(){const el=document.getElementById('popupCountdown');const rem=_tokenData.exp-Date.now();if(rem<=0){generateToken();return;}const mm=Math.floor(rem/60000),ss=Math.floor((rem%60000)/1000);el.textContent=`${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;}
+function startTokenCountdown(){stopTokenCountdown();_popupInterval=setInterval(updatePopupCountdown,1000);}
+function stopTokenCountdown(){if(_popupInterval){clearInterval(_popupInterval);_popupInterval=null;}}
+window.addEventListener('DOMContentLoaded',()=>{createParticles();setupLightEffect();});
 </script>
 </body>
 </html>
