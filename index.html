@@ -1,52 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Get Key Tool</title>
-  <style>
-    body { font-family: Arial; text-align: center; margin-top: 50px; }
-    button { padding: 10px 20px; background: #4285f4; color: white; border: none; }
-  </style>
-</head>
-<body>
-  <h1>Key Tool</h1>
-  <button id="getKeyBtn">Get Key</button>
-  <p id="keyDisplay"></p>
-
-  <!-- Firebase SDK -->
+  <title>Get Your Key</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
-  
+</head>
+<body>
+  <button id="getKeyBtn">Get Key</button>
+  <div id="keyDisplay"></div>
+
   <script>
-    // Config Firebase của bạn
+    // Firebase config
     const firebaseConfig = {
-      apiKey: "AIzaSyABCD...",
+      apiKey: "AIzaSyDNx8GwL7Cy81tkRsgtePuSRuUTc6UzyTo",
+      authDomain: "key-management-system-xfaz.firebaseapp.com",
       projectId: "key-management-system-xfaz",
-      authDomain: "key-management-system-xfaz.firebaseapp.com"
+      storageBucket: "key-management-system-xfaz.firebasestorage.app",
+      messagingSenderId: "399959977089",
+      appId: "1:399959977089:web:c6375723189aea23087180"
     };
 
-    // Khởi tạo Firebase
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Hàm tạo key ngẫu nhiên
-    function generateKey() {
-      return 'KEY-' + Math.random().toString(36).substr(2, 10).toUpperCase();
-    }
-
-    // Xử lý khi bấm Get Key
     document.getElementById('getKeyBtn').addEventListener('click', async () => {
-      const key = generateKey();
-      
-      // Lưu key lên Firestore
-      await db.collection("keys").add({
-        key: key,
-        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        status: "active",
-        ip: await fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => data.ip)
-      });
-
-      document.getElementById('keyDisplay').textContent = `Key của bạn: ${key}`;
+      try {
+        // Generate random key
+        const newKey = generateKey();
+        
+        // Add to Firestore
+        await db.collection('keys').add({
+          key: newKey,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          used: false,
+          usedAt: null,
+          usedBy: null
+        });
+        
+        // Display to user
+        document.getElementById('keyDisplay').textContent = `Your Key: ${newKey}`;
+      } catch (error) {
+        console.error("Error generating key: ", error);
+      }
     });
+
+    function generateKey() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      let result = '';
+      for (let i = 0; i < 5; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      result += '-';
+      for (let i = 0; i < 5; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      result += '-';
+      for (let i = 0; i < 5; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
   </script>
 </body>
 </html>
