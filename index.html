@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lựa Chọn Trang</title>
+    <style>
+        /* Reset và font chữ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9ff;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c7be5;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .slides-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .slide {
+            width: 350px;
+            height: 250px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(44, 123, 229, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .slide:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(44, 123, 229, 0.3);
+        }
+        
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #2c7be5, #6bb1ff);
+        }
+        
+        .slide-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #2c7be5;
+            transition: all 0.3s ease;
+        }
+        
+        .slide:hover .slide-icon {
+            transform: scale(1.1);
+        }
+        
+        .slide-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #2c7be5;
+        }
+        
+        .slide-desc {
+            color: #666;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        /* Hiệu ứng động */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* Hiệu ứng khi load trang */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide {
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        .slide:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        
+        .slide:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        /* Hiệu ứng sóng khi hover */
+        .slide-effect {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle, rgba(44, 123, 229, 0.1) 0%, rgba(44, 123, 229, 0) 70%);
+            opacity: 0;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: all 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .slide:hover .slide-effect {
+            opacity: 1;
+            transform: scale(1.5);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .slides-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .slide {
+                width: 80%;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="floating">Chọn Trang Bạn Muốn Truy Cập</h1>
+        
+        <div class="slides-container">
+            <div class="slide" onclick="navigateTo('getkey.index')">
+                <div class="slide-effect"></div>
+                <div class="slide-icon">🔑</div>
+                <h3 class="slide-title">Trang Get Key</h3>
+                <p class="slide-desc">Nhận khóa truy cập và thông tin đăng nhập hệ thống</p>
+            </div>
+            
+            <div class="slide" onclick="navigateTo('storage.index')">
+                <div class="slide-effect"></div>
+                <div class="slide-icon">🗄️</div>
+                <h3 class="slide-title">Trang Storage</h3>
+                <p class="slide-desc">Quản lý kho lưu trữ dữ liệu và tài nguyên hệ thống</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function navigateTo(page) {
+            // Hiệu ứng chuyển trang
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                window.location.href = page;
+            }, 500);
+        }
+        
+        // Thêm hiệu ứng khi di chuột vào các slide
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.addEventListener('mouseenter', () => {
+                const icon = slide.querySelector('.slide-icon');
+                icon.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            
+            slide.addEventListener('mouseleave', () => {
+                const icon = slide.querySelector('.slide-icon');
+                icon.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
