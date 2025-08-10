@@ -19,9 +19,39 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             overflow-x: hidden;
+        }
+        
+        /* Language switcher */
+        .language-switcher {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 30px;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+        
+        .language-btn {
+            background: none;
+            border: 1px solid #2c7be5;
+            color: #2c7be5;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .language-btn:hover {
+            background-color: #2c7be5;
+            color: white;
+        }
+        
+        .language-btn.active {
+            background-color: #2c7be5;
+            color: white;
         }
         
         .container {
@@ -29,6 +59,11 @@
             max-width: 1200px;
             padding: 20px;
             text-align: center;
+            margin: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
         h1 {
@@ -259,15 +294,26 @@
             .popup {
                 padding: 20px;
             }
+            
+            .language-switcher {
+                justify-content: center;
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Language switcher -->
+    <div class="language-switcher">
+        <button class="language-btn active" id="enBtn">English</button>
+        <button class="language-btn" id="viBtn">Tiếng Việt</button>
+    </div>
+    
     <!-- Popup thông báo -->
     <div class="popup-overlay" id="popup">
         <div class="popup">
-            <h2>Welcome to Our Service</h2>
-            <p>Thank you for visiting our website. Please select one of the options below to continue. You can choose to hide this notification for today.</p>
+            <h2 id="popupTitle">Welcome to Our Service</h2>
+            <p id="popupMessage">Thank you for visiting our website. Please select one of the options below to continue. You can choose to hide this notification for today.</p>
             <div class="popup-buttons">
                 <button class="popup-btn close-today" id="closeToday">Hide for today</button>
                 <button class="popup-btn close" id="closePopup">I understand</button>
@@ -277,48 +323,127 @@
     
     <!-- Nội dung chính -->
     <div class="container">
-        <h1 class="floating">Select Your Destination Page</h1>
+        <h1 class="floating" id="mainTitle">Select Your Destination Page</h1>
         
         <div class="slides-container">
             <div class="slide" onclick="navigateTo('getkey.index')">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">🔑</div>
-                <h3 class="slide-title">Get Key Page</h3>
-                <p class="slide-desc">Get access keys and system login information</p>
+                <h3 class="slide-title" id="slide1Title">Get Key Page</h3>
+                <p class="slide-desc" id="slide1Desc">Get access keys and system login information</p>
             </div>
             
             <div class="slide" onclick="navigateTo('storage.index')">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">🗄️</div>
-                <h3 class="slide-title">Storage Page</h3>
-                <p class="slide-desc">Manage data storage and system resources</p>
+                <h3 class="slide-title" id="slide2Title">Storage Page</h3>
+                <p class="slide-desc" id="slide2Desc">Manage data storage and system resources</p>
             </div>
         </div>
     </div>
     
     <script>
+        // Đối tượng chứa các ngôn ngữ
+        const languages = {
+            en: {
+                popupTitle: "Welcome to Our Service",
+                popupMessage: "Thank you for visiting our website. Please select one of the options below to continue. You can choose to hide this notification for today.",
+                closeToday: "Hide for today",
+                closePopup: "I understand",
+                mainTitle: "Select Your Destination Page",
+                slide1Title: "Get Key Page",
+                slide1Desc: "Get access keys and system login information",
+                slide2Title: "Storage Page",
+                slide2Desc: "Manage data storage and system resources"
+            },
+            vi: {
+                popupTitle: "Chào mừng đến với Dịch vụ",
+                popupMessage: "Cảm ơn bạn đã ghé thăm website của chúng tôi. Vui lòng chọn một trong các tùy chọn bên dưới để tiếp tục. Bạn có thể chọn ẩn thông báo này trong hôm nay.",
+                closeToday: "Ẩn trong hôm nay",
+                closePopup: "Tôi hiểu",
+                mainTitle: "Chọn Trang Bạn Muốn Truy Cập",
+                slide1Title: "Trang Lấy Khóa",
+                slide1Desc: "Nhận khóa truy cập và thông tin đăng nhập hệ thống",
+                slide2Title: "Trang Lưu Trữ",
+                slide2Desc: "Quản lý kho lưu trữ dữ liệu và tài nguyên hệ thống"
+            }
+        };
+        
+        // Các phần tử cần thay đổi ngôn ngữ
+        const elements = {
+            popupTitle: document.getElementById('popupTitle'),
+            popupMessage: document.getElementById('popupMessage'),
+            closeToday: document.getElementById('closeToday'),
+            closePopup: document.getElementById('closePopup'),
+            mainTitle: document.getElementById('mainTitle'),
+            slide1Title: document.getElementById('slide1Title'),
+            slide1Desc: document.getElementById('slide1Desc'),
+            slide2Title: document.getElementById('slide2Title'),
+            slide2Desc: document.getElementById('slide2Desc')
+        };
+        
+        // Nút chuyển ngôn ngữ
+        const enBtn = document.getElementById('enBtn');
+        const viBtn = document.getElementById('viBtn');
+        
+        // Chuyển đổi ngôn ngữ
+        function changeLanguage(lang) {
+            // Cập nhật nút active
+            enBtn.classList.toggle('active', lang === 'en');
+            viBtn.classList.toggle('active', lang === 'vi');
+            
+            // Cập nhật nội dung
+            for (const [key, element] of Object.entries(elements)) {
+                if (element) {
+                    element.textContent = languages[lang][key];
+                }
+            }
+            
+            // Lưu ngôn ngữ vào localStorage
+            localStorage.setItem('language', lang);
+        }
+        
+        // Sự kiện click nút
+        enBtn.addEventListener('click', () => changeLanguage('en'));
+        viBtn.addEventListener('click', () => changeLanguage('vi'));
+        
+        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
+        function detectLanguage() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang) return savedLang;
+            
+            const browserLang = navigator.language || navigator.userLanguage;
+            return browserLang.startsWith('vi') ? 'vi' : 'en';
+        }
+        
+        // Áp dụng ngôn ngữ khi tải trang
+        window.addEventListener('DOMContentLoaded', () => {
+            const lang = detectLanguage();
+            changeLanguage(lang);
+            
+            // Hiển thị popup nếu cần
+            if (checkPopupCookie()) {
+                setTimeout(() => {
+                    document.getElementById('popup').classList.add('active');
+                }, 500);
+            }
+        });
+        
         // Xử lý popup
         const popup = document.getElementById('popup');
         const closePopup = document.getElementById('closePopup');
         const closeToday = document.getElementById('closeToday');
         
-        // Kiểm tra cookie
+        // Kiểm tra cookie popup
         function checkPopupCookie() {
             const hidePopup = localStorage.getItem('hidePopup');
             if (hidePopup) {
                 const today = new Date().toDateString();
                 if (hidePopup === today) {
-                    return false; // Không hiển thị popup
+                    return false;
                 }
             }
-            return true; // Hiển thị popup
-        }
-        
-        // Hiển thị popup nếu cần
-        if (checkPopupCookie()) {
-            setTimeout(() => {
-                popup.classList.add('active');
-            }, 500);
+            return true;
         }
         
         // Đóng popup
