@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Page Selection</title>
+    <title>Advanced Toolkit</title>
     <style>
         /* Reset và font chữ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f5f9ff;
-            color: #333;
+            background-color: #0a0a12;
+            color: #e0e0e0;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
+        }
+        
+        /* Gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a1a2e 0%, #0a0a12 70%);
+            z-index: -2;
         }
         
         /* Language switcher */
@@ -27,16 +38,17 @@
             display: flex;
             justify-content: flex-end;
             padding: 15px 30px;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            background-color: rgba(10, 10, 18, 0.8);
             z-index: 100;
             position: relative;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(90, 90, 120, 0.2);
         }
         
         .language-btn {
             background: none;
-            border: 1px solid #2c7be5;
-            color: #2c7be5;
+            border: 1px solid #6a5acd;
+            color: #b8b8d0;
             padding: 5px 15px;
             border-radius: 20px;
             cursor: pointer;
@@ -46,13 +58,14 @@
         }
         
         .language-btn:hover {
-            background-color: #2c7be5;
+            background-color: #6a5acd;
             color: white;
         }
         
         .language-btn.active {
-            background-color: #2c7be5;
+            background-color: #6a5acd;
             color: white;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.5);
         }
         
         .container {
@@ -68,41 +81,59 @@
         }
         
         h1 {
-            color: #2c7be5;
+            color: #b8b8d0;
             margin-bottom: 40px;
-            font-size: 2.5rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 2.8rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6a5acd, transparent);
         }
         
         .slides-container {
             display: flex;
             justify-content: center;
             gap: 30px;
-            margin-top: 30px;
+            margin-top: 50px;
             flex-wrap: wrap;
         }
         
         .slide {
-            width: 350px;
-            height: 250px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(44, 123, 229, 0.2);
+            width: 380px;
+            height: 280px;
+            background: rgba(20, 20, 35, 0.6);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
+            border: 1px solid rgba(90, 90, 120, 0.1);
+            backdrop-filter: blur(5px);
         }
         
         .slide:hover {
-            transform: translateY(-10px) rotateX(5deg) rotateY(5deg);
-            box-shadow: 0 15px 35px rgba(44, 123, 229, 0.3);
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(106, 90, 205, 0.4);
+            border-color: rgba(106, 90, 205, 0.3);
+            background: rgba(30, 30, 50, 0.7);
         }
         
         .slide::before {
@@ -111,11 +142,11 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 8px;
-            background: linear-gradient(90deg, #2c7be5, #6bb1ff);
+            height: 4px;
+            background: linear-gradient(90deg, #6a5acd, #9370db);
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.5s ease;
+            transition: transform 0.6s ease;
         }
         
         .slide:hover::before {
@@ -123,55 +154,58 @@
         }
         
         .slide-icon {
-            font-size: 60px;
-            margin-bottom: 20px;
-            color: #2c7be5;
+            font-size: 70px;
+            margin-bottom: 25px;
+            color: #9370db;
             transition: all 0.5s ease;
-            filter: drop-shadow(0 5px 5px rgba(44, 123, 229, 0.3));
+            filter: drop-shadow(0 5px 10px rgba(106, 90, 205, 0.4));
         }
         
         .slide:hover .slide-icon {
-            transform: scale(1.2) rotate(10deg);
-            filter: drop-shadow(0 8px 8px rgba(44, 123, 229, 0.4));
+            transform: scale(1.15) rotate(10deg);
+            filter: drop-shadow(0 8px 15px rgba(106, 90, 205, 0.6));
         }
         
         .slide-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #2c7be5;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: #d0d0f0;
             transition: all 0.3s ease;
             position: relative;
+            font-weight: 500;
         }
         
         .slide:hover .slide-title {
             transform: translateY(-5px);
+            color: white;
         }
         
         .slide-title::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -8px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 2px;
-            background: #2c7be5;
-            transition: width 0.3s ease;
+            background: linear-gradient(90deg, #6a5acd, #9370db);
+            transition: width 0.4s ease;
         }
         
         .slide:hover .slide-title::after {
-            width: 50%;
+            width: 60%;
         }
         
         .slide-desc {
-            color: #666;
+            color: #a0a0c0;
             font-size: 1rem;
-            line-height: 1.5;
+            line-height: 1.6;
             transition: all 0.3s ease;
         }
         
         .slide:hover .slide-desc {
             transform: translateY(5px);
+            color: #c0c0e0;
         }
         
         /* Hiệu ứng nền động */
@@ -187,9 +221,22 @@
         
         .particle {
             position: absolute;
-            background-color: rgba(44, 123, 229, 0.1);
+            background-color: rgba(106, 90, 205, 0.1);
             border-radius: 50%;
             pointer-events: none;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+        
+        /* Hiệu ứng ánh sáng */
+        .light-effect {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 90, 205, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            transition: transform 0.1s ease;
         }
         
         /* Hiệu ứng động */
@@ -198,19 +245,19 @@
                 transform: translateY(0) rotate(0deg);
             }
             50% {
-                transform: translateY(-20px) rotate(5deg);
+                transform: translateY(-20px) rotate(3deg);
             }
         }
         
         .floating {
-            animation: float 4s ease-in-out infinite;
+            animation: float 6s ease-in-out infinite;
         }
         
         /* Hiệu ứng khi load trang */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -220,7 +267,7 @@
         
         .slide {
             opacity: 0;
-            animation: fadeIn 0.8s ease-out forwards;
+            animation: fadeIn 1s ease-out forwards;
         }
         
         .slide:nth-child(1) {
@@ -238,11 +285,11 @@
             height: 100%;
             top: 0;
             left: 0;
-            background: radial-gradient(circle, rgba(44, 123, 229, 0.1) 0%, rgba(44, 123, 229, 0) 70%);
+            background: radial-gradient(circle, rgba(106, 90, 205, 0.15) 0%, transparent 70%);
             opacity: 0;
             border-radius: 50%;
             transform: scale(0);
-            transition: all 0.5s ease;
+            transition: all 0.8s ease;
             pointer-events: none;
         }
         
@@ -258,7 +305,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -266,7 +313,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
         }
         
         .popup-overlay.active {
@@ -275,16 +322,16 @@
         }
         
         .popup {
-            background: white;
+            background: rgba(20, 20, 35, 0.95);
             padding: 30px;
             border-radius: 15px;
             width: 90%;
             max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             position: relative;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-            border: 1px solid rgba(44, 123, 229, 0.2);
+            transform: translateY(30px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(106, 90, 205, 0.2);
         }
         
         .popup-overlay.active .popup {
@@ -292,13 +339,15 @@
         }
         
         .popup h2 {
-            color: #2c7be5;
+            color: #d0d0f0;
             margin-bottom: 15px;
+            font-weight: 400;
         }
         
         .popup p {
             margin-bottom: 25px;
             line-height: 1.6;
+            color: #a0a0c0;
         }
         
         .popup-buttons {
@@ -308,7 +357,7 @@
         }
         
         .popup-btn {
-            padding: 8px 20px;
+            padding: 10px 25px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -317,21 +366,24 @@
         }
         
         .popup-btn.close-today {
-            background: #e0e0e0;
-            color: #333;
+            background: rgba(60, 60, 80, 0.5);
+            color: #c0c0e0;
+            border: 1px solid rgba(90, 90, 120, 0.3);
         }
         
         .popup-btn.close-today:hover {
-            background: #d0d0d0;
+            background: rgba(70, 70, 90, 0.7);
         }
         
         .popup-btn.close {
-            background: #2c7be5;
+            background: linear-gradient(90deg, #6a5acd, #9370db);
             color: white;
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.3);
         }
         
         .popup-btn.close:hover {
-            background: #1a6bda;
+            background: linear-gradient(90deg, #5a4acd, #8360db);
+            box-shadow: 0 5px 20px rgba(106, 90, 205, 0.5);
         }
         
         /* Responsive */
@@ -343,10 +395,11 @@
             
             .slide {
                 width: 90%;
+                height: 250px;
             }
             
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
             .popup {
@@ -361,8 +414,14 @@
     </style>
 </head>
 <body>
+    <!-- Gradient background -->
+    <div class="bg-gradient"></div>
+    
     <!-- Hiệu ứng nền particles -->
     <div class="bg-particles" id="particles"></div>
+    
+    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
+    <div class="light-effect" id="lightEffect"></div>
     
     <!-- Language switcher -->
     <div class="language-switcher">
@@ -373,32 +432,32 @@
     <!-- Popup thông báo -->
     <div class="popup-overlay" id="popup">
         <div class="popup">
-            <h2 id="popupTitle">Welcome to Our Service</h2>
-            <p id="popupMessage">Thank you for visiting our website. Please select one of the options below to continue. You can choose to hide this notification for today.</p>
+            <h2 id="popupTitle">Welcome to Advanced Toolkit</h2>
+            <p id="popupMessage">Thank you for accessing our premium tools. Please select your desired module below. This notification can be hidden for today.</p>
             <div class="popup-buttons">
                 <button class="popup-btn close-today" id="closeToday">Hide for today</button>
-                <button class="popup-btn close" id="closePopup">I understand</button>
+                <button class="popup-btn close" id="closePopup">Continue</button>
             </div>
         </div>
     </div>
     
     <!-- Nội dung chính -->
     <div class="container">
-        <h1 class="floating" id="mainTitle">Select Your Destination Page</h1>
+        <h1 class="floating" id="mainTitle">Advanced Toolkit</h1>
         
         <div class="slides-container">
             <div class="slide" onclick="navigateTo('getkey.index')">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">🔑</div>
                 <h3 class="slide-title" id="slide1Title">Key Tool</h3>
-                <p class="slide-desc" id="slide1Desc">Get key tool and rejoin information</p>
+                <p class="slide-desc" id="slide1Desc">Premium key generation and rejoin system</p>
             </div>
             
             <div class="slide" onclick="navigateTo('storage.index')">
                 <div class="slide-effect"></div>
                 <div class="slide-icon">💻</div>
-                <h3 class="slide-title" id="slide2Title">Client/Executor Hack</h3>
-                <p class="slide-desc" id="slide2Desc">Manage client/executor hack tools and resources</p>
+                <h3 class="slide-title" id="slide2Title">Client/Executor</h3>
+                <p class="slide-desc" id="slide2Desc">Advanced client management tools</p>
             </div>
         </div>
     </div>
@@ -407,14 +466,14 @@
         // Tạo hiệu ứng particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
-            const particleCount = 30;
+            const particleCount = window.innerWidth < 768 ? 15 : 30;
             
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
                 // Random kích thước
-                const size = Math.random() * 20 + 5;
+                const size = Math.random() * 15 + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
                 
@@ -423,7 +482,7 @@
                 particle.style.top = `${Math.random() * 100}%`;
                 
                 // Random opacity
-                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                particle.style.opacity = Math.random() * 0.2 + 0.1;
                 
                 // Random animation
                 const duration = Math.random() * 20 + 10;
@@ -434,29 +493,38 @@
             }
         }
         
+        // Hiệu ứng ánh sáng di chuyển theo chuột
+        function setupLightEffect() {
+            const light = document.getElementById('lightEffect');
+            document.addEventListener('mousemove', (e) => {
+                light.style.left = `${e.clientX - 150}px`;
+                light.style.top = `${e.clientY - 150}px`;
+            });
+        }
+        
         // Đối tượng chứa các ngôn ngữ
         const languages = {
             en: {
-                popupTitle: "Welcome to Our Service",
-                popupMessage: "Thank you for visiting our website. Please select one of the options below to continue. You can choose to hide this notification for today.",
+                popupTitle: "Welcome to Advanced Toolkit",
+                popupMessage: "Thank you for accessing our premium tools. Please select your desired module below. This notification can be hidden for today.",
                 closeToday: "Hide for today",
-                closePopup: "I understand",
-                mainTitle: "Select Your Destination Page",
+                closePopup: "Continue",
+                mainTitle: "Advanced Toolkit",
                 slide1Title: "Key Tool",
-                slide1Desc: "Get key tool and rejoin information",
-                slide2Title: "Client/Executor Hack",
-                slide2Desc: "Manage client/executor hack tools and resources"
+                slide1Desc: "Premium key generation and rejoin system",
+                slide2Title: "Client/Executor",
+                slide2Desc: "Advanced client management tools"
             },
             vi: {
-                popupTitle: "Chào mừng đến với Dịch vụ",
-                popupMessage: "Cảm ơn bạn đã ghé thăm website của chúng tôi. Vui lòng chọn một trong các tùy chọn bên dưới để tiếp tục. Bạn có thể chọn ẩn thông báo này trong hôm nay.",
-                closeToday: "Ẩn trong hôm nay",
-                closePopup: "Tôi hiểu",
-                mainTitle: "Chọn Trang Bạn Muốn Truy Cập",
-                slide1Title: "Lấy Key Tool",
-                slide1Desc: "Nhận key tool và thông tin rejoin",
-                slide2Title: "Client/Executor Hack",
-                slide2Desc: "Quản lý công cụ và tài nguyên hack client/executor"
+                popupTitle: "Chào mừng đến với Bộ Công Cụ Nâng Cao",
+                popupMessage: "Cảm ơn bạn đã truy cập vào hệ thống công cụ cao cấp của chúng tôi. Vui lòng chọn module bạn muốn sử dụng. Bạn có thể ẩn thông báo này trong hôm nay.",
+                closeToday: "Ẩn hôm nay",
+                closePopup: "Tiếp tục",
+                mainTitle: "Bộ Công Cụ Nâng Cao",
+                slide1Title: "Công Cụ Key",
+                slide1Desc: "Hệ thống tạo key và rejoin cao cấp",
+                slide2Title: "Client/Executor",
+                slide2Desc: "Công cụ quản lý client nâng cao"
             }
         };
         
@@ -510,6 +578,7 @@
         // Áp dụng ngôn ngữ khi tải trang
         window.addEventListener('DOMContentLoaded', () => {
             createParticles();
+            setupLightEffect();
             const lang = detectLanguage();
             changeLanguage(lang);
             
@@ -517,7 +586,7 @@
             if (checkPopupCookie()) {
                 setTimeout(() => {
                     document.getElementById('popup').classList.add('active');
-                }, 500);
+                }, 800);
             }
         });
         
@@ -564,7 +633,7 @@
         document.querySelectorAll('.slide').forEach(slide => {
             slide.addEventListener('mouseenter', () => {
                 const icon = slide.querySelector('.slide-icon');
-                icon.style.transform = 'scale(1.2) rotate(10deg)';
+                icon.style.transform = 'scale(1.15) rotate(10deg)';
             });
             
             slide.addEventListener('mouseleave', () => {
