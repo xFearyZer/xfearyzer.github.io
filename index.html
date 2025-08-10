@@ -482,11 +482,11 @@
         <div class="popup">
             <h2 id="keyToolPopupTitle">Get Free Key Tool</h2>
             <div class="key-options">
-                <div class="key-option" onclick="navigateTo('keytool1.html')">
+                <div class="key-option" onclick="grantAccess(); window.location.href='https://xfearyzer-keysystem.netlify.app';">
                     <div class="key-option-title">Option 1</div>
                     <div class="key-option-desc">Get key from source 1</div>
                 </div>
-                <div class="key-option" onclick="navigateTo('keytool2.html')">
+                <div class="key-option" onclick="grantAccess(); window.location.href='https://xfearyzer-keysystem.netlify.app';">
                     <div class="key-option-title">Option 2</div>
                     <div class="key-option-desc">Get key from source 2</div>
                 </div>
@@ -717,6 +717,11 @@
                 icon.style.transform = 'scale(1) rotate(0)';
             });
         });
-    </script>
+    // ====== Bảo mật truy cập Key Tool ======
+function grantAccess() {
+    // Cho phép truy cập trong 5 phút
+    localStorage.setItem('accessGranted', Date.now() + 5*60*1000);
+}
+</script>
 </body>
 </html>
