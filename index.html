@@ -534,7 +534,7 @@
             </div>
             
             <div class="warning-note" id="noteLabel">
-                <strong>Warning:</strong> This key will be valid for 7 days. After expiration, you'll need to generate a new key.
+                <strong>Warning:</strong> This key will be valid for 30 minutes. After expiration, you'll need to generate a new key.
                 If you refresh the page, you will lose the key — please save it before refreshing.
             </div>
             
@@ -569,7 +569,8 @@
     <script>
         // Token system configuration - 30 minutes expiration
         const TOKEN_DURATION_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
-        const KEY_SYSTEM_URL = "https://tinyurl.com/vtb8m8xe";
+        const AUTO_KEY_URL = "https://tinyurl.com/vtb8m8xe";
+        const MANUAL_KEY_URL = "https://note1s.net/note/YxelTzQKqjED";
         let _tokenData = { token: null, exp: 0 };
         let _popupInterval = null;
         let _selectedKeyOption = 'auto'; // Default to auto generate
@@ -650,11 +651,13 @@
                 generateToken(); 
             }
             
-            // Lưu token vào localStorage để trang key system kiểm tra
+            // Lưu token vào localStorage
             localStorage.setItem('xfearyzer_access_token', _tokenData.token);
             localStorage.setItem('xfearyzer_token_expiry', _tokenData.exp.toString());
             
-            const url = new URL(KEY_SYSTEM_URL);
+            // Chọn URL dựa trên option
+            const targetUrl = _selectedKeyOption === 'auto' ? AUTO_KEY_URL : MANUAL_KEY_URL;
+            const url = new URL(targetUrl);
             url.searchParams.set('token', _tokenData.token);
             url.searchParams.set('exp', _tokenData.exp.toString());
             url.searchParams.set('mode', _selectedKeyOption);
@@ -713,7 +716,7 @@
                 autoKeyDesc: "Get your key instantly with one click",
                 manualKeyTitle: "Manual Key Entry",
                 manualKeyDesc: "Enter your existing key manually",
-                noteLabel: "Warning: This key will be valid for 7 days. After expiration, you'll need to generate a new key. If you refresh the page, you will lose the key — please save it before refreshing.",
+                noteLabel: "Warning: This key will be valid for 30 minutes. After expiration, you'll need to generate a new key. If you refresh the page, you will lose the key — please save it before refreshing.",
                 continueBtn: "Get Key",
                 backBtn: "Back"
             },
@@ -732,7 +735,7 @@
                 autoKeyDesc: "Lấy key ngay lập tức với một cú nhấp chuột",
                 manualKeyTitle: "Nhập Key Thủ Công",
                 manualKeyDesc: "Nhập key có sẵn của bạn theo cách thủ công",
-                noteLabel: "Cảnh báo: Key này sẽ có hiệu lực trong 7 ngày. Sau khi hết hạn, bạn cần tạo key mới. Nếu làm mới trang, bạn sẽ mất key — vui lòng lưu lại trước khi làm mới.",
+                noteLabel: "Cảnh báo: Key này sẽ có hiệu lực trong 30 phút. Sau khi hết hạn, bạn cần tạo key mới. Nếu làm mới trang, bạn sẽ mất key — vui lòng lưu lại trước khi làm mới.",
                 continueBtn: "Lấy Key",
                 backBtn: "Quay lại"
             }
