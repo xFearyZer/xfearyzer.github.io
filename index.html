@@ -428,19 +428,25 @@
             color: #a0a0c0;
         }
         
-        /* Ẩn countdown */
+        /* Hiển thị countdown */
         .countdown-display {
-            display: none;
+            display: block;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #b8b8d0;
         }
         
         .expiry-date {
-            display: none;
+            display: block;
+            margin-top: 5px;
+            font-size: 0.85rem;
+            color: #a0a0c0;
         }
         
         .warning-note {
             font-size: 0.9rem;
             color: rgba(255, 255, 255, 0.7);
-            margin-top: 8px;
+            margin-top: 15px;
             padding: 10px;
             background: rgba(255, 165, 0, 0.1);
             border-left: 3px solid orange;
@@ -506,7 +512,7 @@
         </div>
     </div>
     
-    <!-- Popup chọn Key Tool (đã ẩn countdown) -->
+    <!-- Popup chọn Key Tool -->
     <div class="popup-overlay" id="keyToolPopup">
         <div class="popup">
             <h2 id="keyToolPopupTitle">Get Free Key Tool</h2>
@@ -521,14 +527,14 @@
                 </div>
             </div>
             
-            <!-- Phần countdown đã được ẩn bằng CSS -->
+            <!-- Phần countdown -->
             <div class="countdown-display" id="countdownLabel">
-                <div>Token expires in: <span class="countdown-value" id="popupCountdown">--:--:--:--</span></div>
-                <div class="expiry-date" id="expiryDate">Expires on: --/--/----</div>
+                <div>Token expires in: <span class="countdown-value" id="popupCountdown">--:--</span></div>
+                <div class="expiry-date" id="expiryDate">Expires at: --:--</div>
             </div>
             
             <div class="warning-note" id="noteLabel">
-                <strong>Warning:</strong> This key will be valid for 7 days. After expiration, you'll need to generate a new key.
+                <strong>Warning:</strong> This key will be valid for 30 minutes. After expiration, you'll need to generate a new key.
                 If you refresh the page, you will lose the key — please save it before refreshing.
             </div>
             
@@ -561,8 +567,9 @@
     </div>
     
     <script>
-        // Token system configuration - 7 days expiration
-        const TOKEN_DURATION_MS = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+        // Token system configuration - 30 minutes expiration
+        const TOKEN_DURATION_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
+        const KEY_SYSTEM_URL = "https://xfearyzer-keysystem.netlify.app";
         let _tokenData = { token: null, exp: 0 };
         let _popupInterval = null;
         let _selectedKeyOption = 'auto'; // Default to auto generate
@@ -643,7 +650,11 @@
                 generateToken(); 
             }
             
-            const url = new URL('https://xfearyzer-keysystem.netlify.app');
+            // Lưu token vào localStorage để trang key system kiểm tra
+            localStorage.setItem('xfearyzer_access_token', _tokenData.token);
+            localStorage.setItem('xfearyzer_token_expiry', _tokenData.exp.toString());
+            
+            const url = new URL(KEY_SYSTEM_URL);
             url.searchParams.set('token', _tokenData.token);
             url.searchParams.set('exp', _tokenData.exp.toString());
             url.searchParams.set('mode', _selectedKeyOption);
@@ -659,25 +670,18 @@
                 return; 
             }
             
-            // Tính toán thời gian (vẫn chạy ngầm dù không hiển thị)
-            const days = Math.floor(rem / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((rem % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((rem % (1000 * 60)) / 1000);
+            const mins = Math.floor(rem / (1000 * 60));
+            const secs = Math.floor((rem % (1000 * 60)) / 1000);
             
             document.getElementById('popupCountdown').textContent = 
-                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+                `${mins}m ${secs}s`;
                 
-            // Cập nhật ngày hết hạn (vẫn chạy ngầm)
             const expiryDate = new Date(_tokenData.exp);
-            const formattedDate = expiryDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit',
+            const formattedDate = expiryDate.toLocaleTimeString('en-US', {
                 hour: '2-digit',
                 minute: '2-digit'
             });
-            document.getElementById('expiryDate').textContent = `Expires on: ${formattedDate}`;
+            document.getElementById('expiryDate').textContent = `Expires at: ${formattedDate}`;
         }
         
         function startTokenCountdown() { 
@@ -709,7 +713,7 @@
                 autoKeyDesc: "Get your key instantly with one click",
                 manualKeyTitle: "Manual Key Entry",
                 manualKeyDesc: "Enter your existing key manually",
-                noteLabel: "Warning: This key will be valid for 7 days. After expiration, you'll need to generate a new key. If you refresh the page, you will lose the key — please save it before refreshing.",
+                noteLabel: "Warning: This key will be valid for 30 minutes. After expiration, you'll need to generate a new key. If you refresh the page, you will lose the key — please save it before refreshing.",
                 continueBtn: "Get Key",
                 backBtn: "Back"
             },
@@ -728,7 +732,7 @@
                 autoKeyDesc: "Lấy key ngay lập tức với một cú nhấp chuột",
                 manualKeyTitle: "Nhập Key Thủ Công",
                 manualKeyDesc: "Nhập key có sẵn của bạn theo cách thủ công",
-                noteLabel: "Cảnh báo: Key này sẽ có hiệu lực trong 7 ngày. Sau khi hết hạn, bạn cần tạo key mới. Nếu làm mới trang, bạn sẽ mất key — vui lòng lưu lại trước khi làm mới.",
+                noteLabel: "Cảnh báo: Key này sẽ có hiệu lực trong 30 phút. Sau khi hết hạn, bạn cần tạo key mới. Nếu làm mới trang, bạn sẽ mất key — vui lòng lưu lại trước khi làm mới.",
                 continueBtn: "Lấy Key",
                 backBtn: "Quay lại"
             }
