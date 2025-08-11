@@ -615,10 +615,22 @@
         }
         
         // Key Tool functions
-        function showKeyToolPopup() { 
+        function showKeyToolPopup() {
+        // Kiểm tra token đã lưu trong localStorage
+        const savedToken = localStorage.getItem('xfearyzer_access_token');
+        const savedExp = parseInt(localStorage.getItem('xfearyzer_token_expiry'), 10);
+
+        if (savedToken && savedExp && Date.now() < savedExp) {
+            // Token còn hạn → dùng lại và vào ngay
+            _tokenData.token = savedToken;
+            _tokenData.exp = savedExp;
+            continueToKeyTool();
+        } else {
+            // Token chưa có hoặc đã hết hạn → tạo mới
             generateToken();
-            document.getElementById('keyToolPopup').classList.add('active'); 
+            document.getElementById('keyToolPopup').classList.add('active');
         }
+    }
         
         function closeKeyToolPopup() { 
             document.getElementById('keyToolPopup').classList.remove('active'); 
@@ -867,4 +879,4 @@
         });
     </script>
 </body>
-</html>
+</html> 
