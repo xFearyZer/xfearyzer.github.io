@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Toolkit</title>
     <style>
-        /* Reset and fonts */
+        /* Reset và font chữ */
         * {
             margin: 0;
             padding: 0;
@@ -211,7 +211,7 @@
             color: #c0c0e0;
         }
         
-        /* Background effects */
+        /* Hiệu ứng nền động */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -230,7 +230,7 @@
             box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
         }
         
-        /* Light effect */
+        /* Hiệu ứng ánh sáng */
         .light-effect {
             position: fixed;
             width: 300px;
@@ -242,7 +242,7 @@
             transition: transform 0.1s ease;
         }
         
-        /* Animations */
+        /* Hiệu ứng động */
         @keyframes float {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
@@ -256,7 +256,7 @@
             animation: float 6s ease-in-out infinite;
         }
         
-        /* Page load animation */
+        /* Hiệu ứng khi load trang */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -281,7 +281,7 @@
             animation-delay: 0.4s;
         }
         
-        /* Hover wave effect */
+        /* Hiệu ứng sóng khi hover */
         .slide-effect {
             position: absolute;
             width: 100%;
@@ -301,7 +301,7 @@
             transform: scale(2);
         }
         
-        /* Popup styles */
+        /* Popup thông báo */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -392,13 +392,12 @@
             box-shadow: 0 5px 20px rgba(106, 90, 205, 0.5);
         }
         
-        /* Key Tool Popup */
+        /* Key Tool Selection Popup */
         .key-options {
             display: flex;
             flex-direction: column;
             gap: 15px;
             width: 100%;
-            margin-bottom: 20px;
         }
         
         .key-option {
@@ -429,24 +428,13 @@
             color: #a0a0c0;
         }
         
+        /* Ẩn countdown */
         .countdown-display {
-            font-weight: 600;
-            margin: 15px 0;
-            padding: 10px;
-            background: rgba(40, 40, 60, 0.6);
-            border-radius: 5px;
-            border-left: 3px solid #6a5acd;
-        }
-        
-        .countdown-value {
-            color: #9370db;
-            font-weight: 700;
+            display: none;
         }
         
         .expiry-date {
-            color: #b8b8d0;
-            font-size: 0.9rem;
-            margin-top: 5px;
+            display: none;
         }
         
         .warning-note {
@@ -494,43 +482,34 @@
     <!-- Gradient background -->
     <div class="bg-gradient"></div>
     
-    <!-- Background particles -->
+    <!-- Hiệu ứng nền particles -->
     <div class="bg-particles" id="particles"></div>
     
-    <!-- Mouse light effect -->
+    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
     <div class="light-effect" id="lightEffect"></div>
     
     <!-- Language switcher -->
     <div class="language-switcher">
-        <button class="language-btn active" id="enBtn">
-            <span>🇬🇧</span> English
-        </button>
-        <button class="language-btn" id="viBtn">
-            <span>🇻🇳</span> Tiếng Việt
-        </button>
+        <button class="language-btn active" id="enBtn">English</button>
+        <button class="language-btn" id="viBtn">Tiếng Việt</button>
     </div>
     
-    <!-- Welcome popup -->
+    <!-- Popup thông báo -->
     <div class="popup-overlay" id="popup">
         <div class="popup">
             <h2 id="popupTitle">Welcome to Advanced Toolkit</h2>
             <p id="popupMessage">Thank you for accessing our premium tools. Please select your desired module below. This notification can be hidden for today.</p>
             <div class="popup-buttons">
-                <button class="popup-btn close-today" id="closeToday">
-                    <span>👋</span> Hide for today
-                </button>
-                <button class="popup-btn close" id="closePopup">
-                    <span>🚀</span> Continue
-                </button>
+                <button class="popup-btn close-today" id="closeToday">Hide for today</button>
+                <button class="popup-btn close" id="closePopup">Continue</button>
             </div>
         </div>
     </div>
     
-    <!-- Key Tool Popup -->
+    <!-- Popup chọn Key Tool (đã ẩn countdown) -->
     <div class="popup-overlay" id="keyToolPopup">
         <div class="popup">
             <h2 id="keyToolPopupTitle">Get Free Key Tool</h2>
-            
             <div class="key-options">
                 <div class="key-option" onclick="selectKeyOption('auto')">
                     <div class="key-option-title" id="autoKeyTitle">Auto Generate Key</div>
@@ -542,6 +521,7 @@
                 </div>
             </div>
             
+            <!-- Phần countdown đã được ẩn bằng CSS -->
             <div class="countdown-display" id="countdownLabel">
                 <div>Token expires in: <span class="countdown-value" id="popupCountdown">--:--:--:--</span></div>
                 <div class="expiry-date" id="expiryDate">Expires on: --/--/----</div>
@@ -553,17 +533,13 @@
             </div>
             
             <div class="popup-buttons" style="margin-top:20px;">
-                <button class="popup-btn close" onclick="closeKeyToolPopup()">
-                    <span>🔙</span> <span id="backBtnText">Back</span>
-                </button>
-                <button class="popup-btn close" id="continueBtn" onclick="continueToKeyTool()">
-                    <span>🔑</span> <span id="continueBtnText">Get Key</span>
-                </button>
+                <button class="popup-btn close" onclick="closeKeyToolPopup()">Back</button>
+                <button class="popup-btn close" id="continueBtn" onclick="continueToKeyTool()">Get Key</button>
             </div>
         </div>
     </div>
     
-    <!-- Main content -->
+    <!-- Nội dung chính -->
     <div class="container">
         <h1 class="floating" id="mainTitle">Advanced Toolkit</h1>
         
@@ -591,7 +567,7 @@
         let _popupInterval = null;
         let _selectedKeyOption = 'auto'; // Default to auto generate
         
-        // Create background particles
+        // Tạo hiệu ứng particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = window.innerWidth < 768 ? 15 : 30;
@@ -600,12 +576,12 @@
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Random size
+                // Random kích thước
                 const size = Math.random() * 15 + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
                 
-                // Random position
+                // Random vị trí
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
                 
@@ -621,7 +597,7 @@
             }
         }
         
-        // Setup mouse light effect
+        // Hiệu ứng ánh sáng di chuyển theo chuột
         function setupLightEffect() {
             const light = document.getElementById('lightEffect');
             document.addEventListener('mousemove', (e) => {
@@ -648,12 +624,10 @@
             
             if (option === 'auto') {
                 options[0].style.borderColor = '#6a5acd';
-                document.getElementById('continueBtnText').textContent = 
-                    document.querySelector('.language-btn.active').id === 'enBtn' ? 'Get Key' : 'Lấy Key';
+                document.getElementById('continueBtn').textContent = 'Get Key';
             } else {
                 options[1].style.borderColor = '#6a5acd';
-                document.getElementById('continueBtnText').textContent = 
-                    document.querySelector('.language-btn.active').id === 'enBtn' ? 'Enter Key' : 'Nhập Key';
+                document.getElementById('continueBtn').textContent = 'Enter Key';
             }
         }
         
@@ -685,7 +659,7 @@
                 return; 
             }
             
-            // Calculate days, hours, minutes, seconds
+            // Tính toán thời gian (vẫn chạy ngầm dù không hiển thị)
             const days = Math.floor(rem / (1000 * 60 * 60 * 24));
             const hours = Math.floor((rem % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((rem % (1000 * 60 * 60)) / (1000 * 60));
@@ -694,7 +668,7 @@
             document.getElementById('popupCountdown').textContent = 
                 `${days}d ${hours}h ${minutes}m ${seconds}s`;
                 
-            // Update expiry date display
+            // Cập nhật ngày hết hạn (vẫn chạy ngầm)
             const expiryDate = new Date(_tokenData.exp);
             const formattedDate = expiryDate.toLocaleDateString('en-US', {
                 year: 'numeric',
@@ -718,7 +692,7 @@
             } 
         }
         
-        // Language system
+        // Đối tượng chứa các ngôn ngữ
         const languages = {
             en: {
                 popupTitle: "Welcome to Advanced Toolkit",
@@ -735,8 +709,6 @@
                 autoKeyDesc: "Get your key instantly with one click",
                 manualKeyTitle: "Manual Key Entry",
                 manualKeyDesc: "Enter your existing key manually",
-                countdownLabel: "Token expires in: ",
-                expiryDate: "Expires on: ",
                 noteLabel: "Warning: This key will be valid for 7 days. After expiration, you'll need to generate a new key. If you refresh the page, you will lose the key — please save it before refreshing.",
                 continueBtn: "Get Key",
                 backBtn: "Back"
@@ -756,15 +728,13 @@
                 autoKeyDesc: "Lấy key ngay lập tức với một cú nhấp chuột",
                 manualKeyTitle: "Nhập Key Thủ Công",
                 manualKeyDesc: "Nhập key có sẵn của bạn theo cách thủ công",
-                countdownLabel: "Token hết hạn sau: ",
-                expiryDate: "Hết hạn vào: ",
                 noteLabel: "Cảnh báo: Key này sẽ có hiệu lực trong 7 ngày. Sau khi hết hạn, bạn cần tạo key mới. Nếu làm mới trang, bạn sẽ mất key — vui lòng lưu lại trước khi làm mới.",
                 continueBtn: "Lấy Key",
                 backBtn: "Quay lại"
             }
         };
         
-        // Elements that need language updates
+        // Các phần tử cần thay đổi ngôn ngữ
         const elements = {
             popupTitle: document.getElementById('popupTitle'),
             popupMessage: document.getElementById('popupMessage'),
@@ -780,57 +750,37 @@
             autoKeyDesc: document.getElementById('autoKeyDesc'),
             manualKeyTitle: document.getElementById('manualKeyTitle'),
             manualKeyDesc: document.getElementById('manualKeyDesc'),
-            countdownLabel: document.getElementById('countdownLabel'),
-            expiryDate: document.getElementById('expiryDate'),
             noteLabel: document.getElementById('noteLabel'),
-            continueBtnText: document.getElementById('continueBtnText'),
-            backBtnText: document.getElementById('backBtnText')
+            continueBtn: document.getElementById('continueBtn'),
+            backBtn: document.querySelector('#keyToolPopup .popup-buttons .popup-btn.close')
         };
         
-        // Language buttons
+        // Nút chuyển ngôn ngữ
         const enBtn = document.getElementById('enBtn');
         const viBtn = document.getElementById('viBtn');
         
-        // Change language
+        // Chuyển đổi ngôn ngữ
         function changeLanguage(lang) {
-            // Update active button
+            // Cập nhật nút active
             enBtn.classList.toggle('active', lang === 'en');
             viBtn.classList.toggle('active', lang === 'vi');
             
-            // Update all text content
+            // Cập nhật nội dung
             for (const [key, element] of Object.entries(elements)) {
                 if (element) {
-                    if (key === 'countdownLabel') {
-                        // Special handling for countdown label
-                        element.childNodes[0].textContent = languages[lang].countdownLabel;
-                    } else if (key === 'expiryDate') {
-                        // Special handling for expiry date
-                        const currentText = element.textContent;
-                        const datePart = currentText.split(': ')[1] || '--/--/----';
-                        element.textContent = `${languages[lang].expiryDate}${datePart}`;
-                    } else {
-                        element.textContent = languages[lang][key];
-                    }
+                    element.textContent = languages[lang][key];
                 }
             }
             
-            // Update continue button text based on selected option
-            if (_selectedKeyOption === 'auto') {
-                document.getElementById('continueBtnText').textContent = languages[lang].continueBtn;
-            } else {
-                document.getElementById('continueBtnText').textContent = 
-                    lang === 'en' ? 'Enter Key' : 'Nhập Key';
-            }
-            
-            // Save language preference
+            // Lưu ngôn ngữ vào localStorage
             localStorage.setItem('language', lang);
         }
         
-        // Button events
+        // Sự kiện click nút
         enBtn.addEventListener('click', () => changeLanguage('en'));
         viBtn.addEventListener('click', () => changeLanguage('vi'));
         
-        // Detect language preference
+        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
         function detectLanguage() {
             const savedLang = localStorage.getItem('language');
             if (savedLang) return savedLang;
@@ -839,14 +789,14 @@
             return browserLang.startsWith('vi') ? 'vi' : 'en';
         }
         
-        // Initialize on page load
+        // Áp dụng ngôn ngữ khi tải trang
         window.addEventListener('DOMContentLoaded', () => {
             createParticles();
             setupLightEffect();
             const lang = detectLanguage();
             changeLanguage(lang);
             
-            // Show welcome popup if needed
+            // Hiển thị popup nếu cần
             if (checkPopupCookie()) {
                 setTimeout(() => {
                     document.getElementById('popup').classList.add('active');
@@ -857,11 +807,12 @@
             selectKeyOption('auto');
         });
         
-        // Welcome popup handling
+        // Xử lý popup
         const popup = document.getElementById('popup');
         const closePopup = document.getElementById('closePopup');
         const closeToday = document.getElementById('closeToday');
         
+        // Kiểm tra cookie popup
         function checkPopupCookie() {
             const hidePopup = localStorage.getItem('hidePopup');
             if (hidePopup) {
@@ -873,17 +824,19 @@
             return true;
         }
         
+        // Đóng popup
         closePopup.addEventListener('click', () => {
             popup.classList.remove('active');
         });
         
+        // Tắt trong hôm nay
         closeToday.addEventListener('click', () => {
             const today = new Date().toDateString();
             localStorage.setItem('hidePopup', today);
             popup.classList.remove('active');
         });
         
-        // Navigation
+        // Chuyển trang
         function navigateTo(page) {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
@@ -893,7 +846,7 @@
             }, 500);
         }
         
-        // Slide hover effects
+        // Hiệu ứng hover slide
         document.querySelectorAll('.slide').forEach(slide => {
             slide.addEventListener('mouseenter', () => {
                 const icon = slide.querySelector('.slide-icon');
