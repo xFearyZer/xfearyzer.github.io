@@ -569,12 +569,14 @@
     <script>
         // Token system configuration - 30 minutes expiration
         const TOKEN_DURATION_MS = 30 * 60 * 1000; // 30 minutes in milliseconds
-        const AUTO_KEY_URL = "https://tinyurl.com/vtb8m8xe";
-        const MANUAL_KEY_URL = "https://note1s.net/note/YxelTzQKqjED";
+        const AUTO_REDIRECT_URL = "https://tinyurl.com/vtb8m8xe";
+        const MANUAL_REDIRECT_URL = "https://note1s.net/note/YxelTzQKqjED";
+        const KEY_SYSTEM_URL = "https://xfearyzer-keysystem.netlify.app";
+        
         let _tokenData = { token: null, exp: 0 };
         let _popupInterval = null;
         let _selectedKeyOption = 'auto'; // Default to auto generate
-        
+
         // Tạo hiệu ứng particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -616,7 +618,14 @@
         
         // Key Tool functions
         function showKeyToolPopup() { 
+            // Tạo token mới
             generateToken();
+            
+            // Lưu token vào localStorage
+            localStorage.setItem('xfearyzer_access_token', _tokenData.token);
+            localStorage.setItem('xfearyzer_token_expiry', _tokenData.exp.toString());
+            
+            // Hiển thị popup chọn option
             document.getElementById('keyToolPopup').classList.add('active'); 
         }
         
@@ -651,16 +660,17 @@
                 generateToken(); 
             }
             
-            // Lưu token vào localStorage
-            localStorage.setItem('xfearyzer_access_token', _tokenData.token);
-            localStorage.setItem('xfearyzer_token_expiry', _tokenData.exp.toString());
-            
             // Chọn URL dựa trên option
-            const targetUrl = _selectedKeyOption === 'auto' ? AUTO_KEY_URL : MANUAL_KEY_URL;
-            const url = new URL(targetUrl);
+            const redirectUrl = _selectedKeyOption === 'auto' 
+                ? AUTO_REDIRECT_URL 
+                : MANUAL_REDIRECT_URL;
+            
+            // Tạo URL redirect với các tham số cần thiết
+            const url = new URL(redirectUrl);
             url.searchParams.set('token', _tokenData.token);
             url.searchParams.set('exp', _tokenData.exp.toString());
             url.searchParams.set('mode', _selectedKeyOption);
+            url.searchParams.set('redirect', KEY_SYSTEM_URL);
             
             stopTokenCountdown();
             window.location.href = url.toString();
