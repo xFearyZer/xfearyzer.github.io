@@ -616,19 +616,15 @@
         
         // Key Tool functions
         function showKeyToolPopup() {
-        // Kiểm tra token đã lưu trong localStorage
-        const savedToken = localStorage.getItem('xfearyzer_access_token');
-        const savedExp = parseInt(localStorage.getItem('xfearyzer_token_expiry'), 10);
-
-        if (savedToken && savedExp && Date.now() < savedExp) {
-            // Token còn hạn → dùng lại và vào ngay
-            _tokenData.token = savedToken;
-            _tokenData.exp = savedExp;
-            continueToKeyTool();
-        } else {
+        // Luôn hiển thị popup chọn option, không dùng token cũ để vào thẳng
+        generateToken();
+        \1
+        selectKeyOption('auto');
+    } else {
             // Token chưa có hoặc đã hết hạn → tạo mới
             generateToken();
-            document.getElementById('keyToolPopup').classList.add('active');
+            \1
+        selectKeyOption('auto');
         }
     }
         
