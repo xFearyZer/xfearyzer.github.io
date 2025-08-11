@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Toolkit</title>
     <style>
-        /* Reset và font chữ */
+        /* Reset and fonts */
         * {
             margin: 0;
             padding: 0;
@@ -55,6 +55,9 @@
             margin-left: 10px;
             font-size: 0.9rem;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .language-btn:hover {
@@ -208,7 +211,7 @@
             color: #c0c0e0;
         }
         
-        /* Hiệu ứng nền động */
+        /* Background effects */
         .bg-particles {
             position: fixed;
             top: 0;
@@ -227,7 +230,7 @@
             box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
         }
         
-        /* Hiệu ứng ánh sáng */
+        /* Light effect */
         .light-effect {
             position: fixed;
             width: 300px;
@@ -239,7 +242,7 @@
             transition: transform 0.1s ease;
         }
         
-        /* Hiệu ứng động */
+        /* Animations */
         @keyframes float {
             0%, 100% {
                 transform: translateY(0) rotate(0deg);
@@ -253,7 +256,7 @@
             animation: float 6s ease-in-out infinite;
         }
         
-        /* Hiệu ứng khi load trang */
+        /* Page load animation */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -278,7 +281,7 @@
             animation-delay: 0.4s;
         }
         
-        /* Hiệu ứng sóng khi hover */
+        /* Hover wave effect */
         .slide-effect {
             position: absolute;
             width: 100%;
@@ -298,7 +301,7 @@
             transform: scale(2);
         }
         
-        /* Popup thông báo */
+        /* Popup styles */
         .popup-overlay {
             position: fixed;
             top: 0;
@@ -363,6 +366,9 @@
             cursor: pointer;
             font-weight: 500;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .popup-btn.close-today {
@@ -386,12 +392,13 @@
             box-shadow: 0 5px 20px rgba(106, 90, 205, 0.5);
         }
         
-        /* Key Tool Selection Popup */
+        /* Key Tool Popup */
         .key-options {
             display: flex;
             flex-direction: column;
             gap: 15px;
             width: 100%;
+            margin-bottom: 20px;
         }
         
         .key-option {
@@ -420,6 +427,34 @@
         .key-option-desc {
             font-size: 0.9rem;
             color: #a0a0c0;
+        }
+        
+        .countdown-display {
+            font-weight: 600;
+            margin: 15px 0;
+            padding: 10px;
+            background: rgba(40, 40, 60, 0.6);
+            border-radius: 5px;
+            border-left: 3px solid #6a5acd;
+        }
+        
+        .countdown-value {
+            color: #9370db;
+            font-weight: 700;
+        }
+        
+        .warning-note {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 8px;
+            padding: 10px;
+            background: rgba(255, 165, 0, 0.1);
+            border-left: 3px solid orange;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .warning-note strong {
+            color: #ffcc00;
         }
         
         /* Responsive */
@@ -453,49 +488,75 @@
     <!-- Gradient background -->
     <div class="bg-gradient"></div>
     
-    <!-- Hiệu ứng nền particles -->
+    <!-- Background particles -->
     <div class="bg-particles" id="particles"></div>
     
-    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
+    <!-- Mouse light effect -->
     <div class="light-effect" id="lightEffect"></div>
     
     <!-- Language switcher -->
     <div class="language-switcher">
-        <button class="language-btn active" id="enBtn">English</button>
-        <button class="language-btn" id="viBtn">Tiếng Việt</button>
+        <button class="language-btn active" id="enBtn">
+            <span>🇬🇧</span> English
+        </button>
+        <button class="language-btn" id="viBtn">
+            <span>🇻🇳</span> Tiếng Việt
+        </button>
     </div>
     
-    <!-- Popup thông báo -->
+    <!-- Welcome popup -->
     <div class="popup-overlay" id="popup">
         <div class="popup">
             <h2 id="popupTitle">Welcome to Advanced Toolkit</h2>
             <p id="popupMessage">Thank you for accessing our premium tools. Please select your desired module below. This notification can be hidden for today.</p>
             <div class="popup-buttons">
-                <button class="popup-btn close-today" id="closeToday">Hide for today</button>
-                <button class="popup-btn close" id="closePopup">Continue</button>
+                <button class="popup-btn close-today" id="closeToday">
+                    <span>👋</span> Hide for today
+                </button>
+                <button class="popup-btn close" id="closePopup">
+                    <span>🚀</span> Continue
+                </button>
             </div>
         </div>
     </div>
     
-    <!-- Popup chọn Key Tool -->
+    <!-- Key Tool Popup -->
     <div class="popup-overlay" id="keyToolPopup">
         <div class="popup">
             <h2 id="keyToolPopupTitle">Get Free Key Tool</h2>
-            <div style="margin-top:10px;">
-                <div style="font-weight:600;" id="countdownLabel">Time left to proceed: <span id="popupCountdown">--:--</span></div>
-                <div style="font-size:0.9rem;color:rgba(255,255,255,0.7);margin-top:8px;" id="noteLabel">
-                    Note: Once you enter the Key Tool page, the key will be generated once and <strong>cannot be generated again</strong>. 
-                    If you refresh the page, you will lose the key — save it before refreshing.
+            
+            <div class="key-options">
+                <div class="key-option" onclick="selectKeyOption('auto')">
+                    <div class="key-option-title" id="autoKeyTitle">Auto Generate Key</div>
+                    <div class="key-option-desc" id="autoKeyDesc">Get your key instantly with one click</div>
+                </div>
+                <div class="key-option" onclick="selectKeyOption('manual')">
+                    <div class="key-option-title" id="manualKeyTitle">Manual Key Entry</div>
+                    <div class="key-option-desc" id="manualKeyDesc">Enter your existing key manually</div>
                 </div>
             </div>
+            
+            <div class="countdown-display" id="countdownLabel">
+                Token expires in: <span class="countdown-value" id="popupCountdown">--:--</span>
+            </div>
+            
+            <div class="warning-note" id="noteLabel">
+                <strong>Warning:</strong> After entering the Key Tool page, the key will be generated once and <strong>cannot be generated again</strong>. 
+                If you refresh the page, you will lose the key — save it before refreshing.
+            </div>
+            
             <div class="popup-buttons" style="margin-top:20px;">
-                <button class="popup-btn close" onclick="closeKeyToolPopup()">Back</button>
-                <button class="popup-btn close-today" id="continueBtn" onclick="continueToKeyTool()">Continue</button>
+                <button class="popup-btn close" onclick="closeKeyToolPopup()">
+                    <span>🔙</span> <span id="backBtnText">Back</span>
+                </button>
+                <button class="popup-btn close" id="continueBtn" onclick="continueToKeyTool()">
+                    <span>🔑</span> <span id="continueBtnText">Get Key</span>
+                </button>
             </div>
         </div>
     </div>
     
-    <!-- Nội dung chính -->
+    <!-- Main content -->
     <div class="container">
         <h1 class="floating" id="mainTitle">Advanced Toolkit</h1>
         
@@ -517,7 +578,13 @@
     </div>
     
     <script>
-        // Tạo hiệu ứng particles
+        // Token system configuration
+        const TOKEN_DURATION_MS = 20 * 60 * 1000; // 20 minutes
+        let _tokenData = { token: null, exp: 0 };
+        let _popupInterval = null;
+        let _selectedKeyOption = 'auto'; // Default to auto generate
+        
+        // Create background particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
             const particleCount = window.innerWidth < 768 ? 15 : 30;
@@ -526,12 +593,12 @@
                 const particle = document.createElement('div');
                 particle.classList.add('particle');
                 
-                // Random kích thước
+                // Random size
                 const size = Math.random() * 15 + 5;
                 particle.style.width = `${size}px`;
                 particle.style.height = `${size}px`;
                 
-                // Random vị trí
+                // Random position
                 particle.style.left = `${Math.random() * 100}%`;
                 particle.style.top = `${Math.random() * 100}%`;
                 
@@ -547,7 +614,7 @@
             }
         }
         
-        // Hiệu ứng ánh sáng di chuyển theo chuột
+        // Setup mouse light effect
         function setupLightEffect() {
             const light = document.getElementById('lightEffect');
             document.addEventListener('mousemove', (e) => {
@@ -556,20 +623,31 @@
             });
         }
         
-        // Key Tool Token System
-        const TOKEN_DURATION_MS = 20 * 60 * 1000;
-        let _tokenData = { token: null, exp: 0 };
-        let _popupInterval = null;
-
-        function showKeyToolPopup() { openKeyToolPopup(); }
-        function openKeyToolPopup() { 
-            generateToken(); 
+        // Key Tool functions
+        function showKeyToolPopup() { 
+            generateToken();
             document.getElementById('keyToolPopup').classList.add('active'); 
         }
         
         function closeKeyToolPopup() { 
             document.getElementById('keyToolPopup').classList.remove('active'); 
             stopTokenCountdown(); 
+        }
+        
+        function selectKeyOption(option) {
+            _selectedKeyOption = option;
+            const options = document.querySelectorAll('.key-option');
+            options.forEach(opt => opt.style.borderColor = 'rgba(106, 90, 205, 0.3)');
+            
+            if (option === 'auto') {
+                options[0].style.borderColor = '#6a5acd';
+                document.getElementById('continueBtnText').textContent = 
+                    document.querySelector('.language-btn.active').id === 'enBtn' ? 'Get Key' : 'Lấy Key';
+            } else {
+                options[1].style.borderColor = '#6a5acd';
+                document.getElementById('continueBtnText').textContent = 
+                    document.querySelector('.language-btn.active').id === 'enBtn' ? 'Enter Key' : 'Nhập Key';
+            }
         }
         
         function generateToken() {
@@ -580,20 +658,30 @@
         }
         
         function continueToKeyTool() {
-            if (!_tokenData.token || !_tokenData.exp) { generateToken(); }
+            if (!_tokenData.token || !_tokenData.exp) { 
+                generateToken(); 
+            }
+            
             const url = new URL('https://xfearyzer-keysystem.netlify.app');
             url.searchParams.set('token', _tokenData.token);
             url.searchParams.set('exp', _tokenData.exp.toString());
+            url.searchParams.set('mode', _selectedKeyOption);
+            
             stopTokenCountdown();
             window.location.href = url.toString();
         }
         
         function updatePopupCountdown() {
             const rem = _tokenData.exp - Date.now();
-            if (rem <= 0) { generateToken(); return; }
+            if (rem <= 0) { 
+                generateToken(); 
+                return; 
+            }
+            
             const mm = Math.floor(rem / 60000);
             const ss = Math.floor((rem % 60000) / 1000);
-            document.getElementById('popupCountdown').textContent = `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
+            document.getElementById('popupCountdown').textContent = 
+                `${String(mm).padStart(2,'0')}:${String(ss).padStart(2,'0')}`;
         }
         
         function startTokenCountdown() { 
@@ -608,7 +696,7 @@
             } 
         }
         
-        // Đối tượng chứa các ngôn ngữ
+        // Language system
         const languages = {
             en: {
                 popupTitle: "Welcome to Advanced Toolkit",
@@ -621,9 +709,13 @@
                 slide2Title: "Client/Executor",
                 slide2Desc: "Advanced client management tools",
                 keyToolPopupTitle: "Get Free Key Tool",
-                countdownLabel: "Time left to proceed: ",
-                noteLabel: "Note: Once you enter the Key Tool page, the key will be generated once and cannot be generated again. If you refresh the page, you will lose the key — save it before refreshing.",
-                continueBtn: "Continue",
+                autoKeyTitle: "Auto Generate Key",
+                autoKeyDesc: "Get your key instantly with one click",
+                manualKeyTitle: "Manual Key Entry",
+                manualKeyDesc: "Enter your existing key manually",
+                countdownLabel: "Token expires in: ",
+                noteLabel: "Warning: After entering the Key Tool page, the key will be generated once and cannot be generated again. If you refresh the page, you will lose the key — save it before refreshing.",
+                continueBtn: "Get Key",
                 backBtn: "Back"
             },
             vi: {
@@ -637,14 +729,18 @@
                 slide2Title: "Client/Executor",
                 slide2Desc: "Công cụ quản lý client nâng cao",
                 keyToolPopupTitle: "Lấy Key Tool Miễn Phí",
-                countdownLabel: "Thời gian còn lại để chuyển: ",
-                noteLabel: "Lưu ý: Sau khi vào trang Key Tool, key sẽ được tạo một lần và không thể tạo thêm. Nếu làm mới trang (reload) bạn sẽ mất key — hãy lưu lại trước khi reload.",
-                continueBtn: "Tiếp tục",
+                autoKeyTitle: "Tự Động Tạo Key",
+                autoKeyDesc: "Lấy key ngay lập tức với một cú nhấp chuột",
+                manualKeyTitle: "Nhập Key Thủ Công",
+                manualKeyDesc: "Nhập key có sẵn của bạn theo cách thủ công",
+                countdownLabel: "Token hết hạn sau: ",
+                noteLabel: "Cảnh báo: Sau khi vào trang Key Tool, key sẽ được tạo một lần và không thể tạo thêm. Nếu làm mới trang (reload) bạn sẽ mất key — hãy lưu lại trước khi reload.",
+                continueBtn: "Lấy Key",
                 backBtn: "Quay lại"
             }
         };
         
-        // Các phần tử cần thay đổi ngôn ngữ
+        // Elements that need language updates
         const elements = {
             popupTitle: document.getElementById('popupTitle'),
             popupMessage: document.getElementById('popupMessage'),
@@ -656,27 +752,31 @@
             slide2Title: document.getElementById('slide2Title'),
             slide2Desc: document.getElementById('slide2Desc'),
             keyToolPopupTitle: document.getElementById('keyToolPopupTitle'),
+            autoKeyTitle: document.getElementById('autoKeyTitle'),
+            autoKeyDesc: document.getElementById('autoKeyDesc'),
+            manualKeyTitle: document.getElementById('manualKeyTitle'),
+            manualKeyDesc: document.getElementById('manualKeyDesc'),
             countdownLabel: document.getElementById('countdownLabel'),
             noteLabel: document.getElementById('noteLabel'),
-            continueBtn: document.getElementById('continueBtn'),
-            backBtn: document.querySelector('#keyToolPopup .popup-buttons .popup-btn.close')
+            continueBtnText: document.getElementById('continueBtnText'),
+            backBtnText: document.getElementById('backBtnText')
         };
         
-        // Nút chuyển ngôn ngữ
+        // Language buttons
         const enBtn = document.getElementById('enBtn');
         const viBtn = document.getElementById('viBtn');
         
-        // Chuyển đổi ngôn ngữ
+        // Change language
         function changeLanguage(lang) {
-            // Cập nhật nút active
+            // Update active button
             enBtn.classList.toggle('active', lang === 'en');
             viBtn.classList.toggle('active', lang === 'vi');
             
-            // Cập nhật nội dung
+            // Update all text content
             for (const [key, element] of Object.entries(elements)) {
                 if (element) {
                     if (key === 'countdownLabel') {
-                        // Special handling for countdown label which has child nodes
+                        // Special handling for countdown label
                         element.childNodes[0].textContent = languages[lang].countdownLabel;
                     } else {
                         element.textContent = languages[lang][key];
@@ -684,15 +784,23 @@
                 }
             }
             
-            // Lưu ngôn ngữ vào localStorage
+            // Update continue button text based on selected option
+            if (_selectedKeyOption === 'auto') {
+                document.getElementById('continueBtnText').textContent = languages[lang].continueBtn;
+            } else {
+                document.getElementById('continueBtnText').textContent = 
+                    lang === 'en' ? 'Enter Key' : 'Nhập Key';
+            }
+            
+            // Save language preference
             localStorage.setItem('language', lang);
         }
         
-        // Sự kiện click nút
+        // Button events
         enBtn.addEventListener('click', () => changeLanguage('en'));
         viBtn.addEventListener('click', () => changeLanguage('vi'));
         
-        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
+        // Detect language preference
         function detectLanguage() {
             const savedLang = localStorage.getItem('language');
             if (savedLang) return savedLang;
@@ -701,27 +809,29 @@
             return browserLang.startsWith('vi') ? 'vi' : 'en';
         }
         
-        // Áp dụng ngôn ngữ khi tải trang
+        // Initialize on page load
         window.addEventListener('DOMContentLoaded', () => {
             createParticles();
             setupLightEffect();
             const lang = detectLanguage();
             changeLanguage(lang);
             
-            // Hiển thị popup nếu cần
+            // Show welcome popup if needed
             if (checkPopupCookie()) {
                 setTimeout(() => {
                     document.getElementById('popup').classList.add('active');
                 }, 800);
             }
+            
+            // Set default key option
+            selectKeyOption('auto');
         });
         
-        // Xử lý popup
+        // Welcome popup handling
         const popup = document.getElementById('popup');
         const closePopup = document.getElementById('closePopup');
         const closeToday = document.getElementById('closeToday');
         
-        // Kiểm tra cookie popup
         function checkPopupCookie() {
             const hidePopup = localStorage.getItem('hidePopup');
             if (hidePopup) {
@@ -733,19 +843,17 @@
             return true;
         }
         
-        // Đóng popup
         closePopup.addEventListener('click', () => {
             popup.classList.remove('active');
         });
         
-        // Tắt trong hôm nay
         closeToday.addEventListener('click', () => {
             const today = new Date().toDateString();
             localStorage.setItem('hidePopup', today);
             popup.classList.remove('active');
         });
         
-        // Chuyển trang
+        // Navigation
         function navigateTo(page) {
             document.body.style.opacity = '0';
             document.body.style.transition = 'opacity 0.5s ease';
@@ -755,7 +863,7 @@
             }, 500);
         }
         
-        // Hiệu ứng hover slide
+        // Slide hover effects
         document.querySelectorAll('.slide').forEach(slide => {
             slide.addEventListener('mouseenter', () => {
                 const icon = slide.querySelector('.slide-icon');
