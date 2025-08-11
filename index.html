@@ -615,18 +615,10 @@
         }
         
         // Key Tool functions
-        function showKeyToolPopup() {
-        // Luôn hiển thị popup chọn option, không dùng token cũ để vào thẳng
-        generateToken();
-        \1
-        selectKeyOption('auto');
-    } else {
-            // Token chưa có hoặc đã hết hạn → tạo mới
+        function showKeyToolPopup() { 
             generateToken();
-            \1
-        selectKeyOption('auto');
+            document.getElementById('keyToolPopup').classList.add('active'); 
         }
-    }
         
         function closeKeyToolPopup() { 
             document.getElementById('keyToolPopup').classList.remove('active'); 
@@ -875,4 +867,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
