@@ -3,161 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Client/Executor | XFearyzer</title>
+    <title>Client/Executor | Advanced Toolkit</title>
     <style>
-        :root {
-            --primary-color: #6a5acd;
-            --secondary-color: #9370db;
-            --dark-bg: #0a0a12;
-            --card-bg: rgba(20, 20, 35, 0.6);
-            --text-light: #e0e0e0;
-            --text-muted: #a0a0c0;
-            --success-color: #4caf50;
-            --danger-color: #f44336;
-        }
-
+        /* Reset và font chữ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
+            background-color: #0a0a12;
+            color: #e0e0e0;
             min-height: 100vh;
-            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
         }
-
+        
+        /* Gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a1a2e 0%, #0a0a12 70%);
+            z-index: -2;
+        }
+        
+        /* Language switcher */
+        .language-switcher {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 30px;
+            background-color: rgba(10, 10, 18, 0.8);
+            z-index: 100;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(90, 90, 120, 0.2);
+        }
+        
+        .language-btn {
+            background: none;
+            border: 1px solid #6a5acd;
+            color: #b8b8d0;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .language-btn:hover {
+            background-color: #6a5acd;
+            color: white;
+        }
+        
+        .language-btn.active {
+            background-color: #6a5acd;
+            color: white;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.5);
+        }
+        
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 30px 20px;
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin: auto;
+            flex: 1;
         }
-
-        header {
-            margin-bottom: 40px;
-            text-align: center;
-        }
-
+        
         h1 {
-            font-size: 2.5rem;
-            color: var(--text-light);
-            margin-bottom: 10px;
+            color: #b8b8d0;
+            margin: 30px 0;
+            font-size: 2.8rem;
+            font-weight: 300;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
         }
-
-        h2 {
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6a5acd, transparent);
+        }
+        
+        /* Hiệu ứng nền động */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(106, 90, 205, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+        
+        /* Hiệu ứng ánh sáng */
+        .light-effect {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 90, 205, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            transition: transform 0.1s ease;
+        }
+        
+        /* Executor List */
+        .executor-list {
+            margin-top: 40px;
+        }
+        
+        .executor-category {
+            margin-bottom: 40px;
+        }
+        
+        .category-title {
             font-size: 1.8rem;
-            color: var(--secondary-color);
-            margin: 30px 0 20px;
-            border-bottom: 2px solid rgba(106, 90, 205, 0.3);
+            color: #d0d0f0;
+            margin-bottom: 20px;
             padding-bottom: 10px;
+            border-bottom: 1px solid rgba(106, 90, 205, 0.3);
         }
-
-        .executor-card {
-            background: var(--card-bg);
+        
+        .executor-item {
+            background: rgba(20, 20, 35, 0.6);
             border-radius: 10px;
             padding: 25px;
-            margin-bottom: 30px;
-            border-left: 4px solid var(--primary-color);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #6a5acd;
         }
-
+        
         .executor-header {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
         }
-
+        
         .executor-checkbox {
             margin-right: 15px;
             transform: scale(1.5);
+            accent-color: #6a5acd;
         }
-
+        
         .executor-name {
             font-size: 1.5rem;
+            color: #d0d0f0;
             font-weight: 500;
         }
-
+        
         .executor-status {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
             margin-left: 15px;
-            font-size: 0.9rem;
-            padding: 3px 10px;
-            border-radius: 20px;
-            background-color: rgba(76, 175, 80, 0.2);
-            color: var(--success-color);
         }
-
-        .executor-update {
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-working {
+            background-color: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .status-down {
+            background-color: #f44336;
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+        
+        .status-text {
             font-size: 0.9rem;
-            color: var(--text-muted);
+        }
+        
+        .last-update {
+            font-size: 0.85rem;
+            color: #a0a0c0;
             margin: 5px 0 15px 35px;
         }
-
+        
         .executor-description {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+            line-height: 1.6;
             margin-left: 35px;
             margin-bottom: 20px;
         }
-
+        
         .download-section {
-            margin-top: 30px;
+            margin-top: 20px;
             padding-top: 20px;
             border-top: 1px dashed rgba(106, 90, 205, 0.3);
         }
-
+        
         .download-title {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
+            color: #b8b8d0;
             margin-bottom: 15px;
-            color: var(--secondary-color);
         }
-
-        .download-link {
+        
+        .download-btn {
             display: inline-block;
             padding: 12px 25px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(90deg, #6a5acd, #9370db);
             color: white;
-            text-decoration: none;
             border-radius: 5px;
+            text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
         }
-
-        .download-link:hover {
+        
+        .download-btn:hover {
             background: linear-gradient(90deg, #5a4acd, #8360db);
             box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
             transform: translateY(-2px);
         }
-
+        
+        /* Back button */
         .back-btn {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--text-muted);
+            color: #b8b8d0;
             text-decoration: none;
-            margin-top: 30px;
+            margin-top: 20px;
             transition: all 0.3s ease;
         }
-
+        
         .back-btn:hover {
-            color: var(--secondary-color);
+            color: #d0d0f0;
         }
-
+        
         /* Responsive */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             
-            h2 {
-                font-size: 1.5rem;
+            .executor-header {
+                flex-wrap: wrap;
             }
             
-            .executor-name {
-                font-size: 1.3rem;
+            .executor-status {
+                margin-left: 35px;
+                margin-top: 5px;
             }
             
             .executor-checkbox {
@@ -168,69 +284,220 @@
     </style>
 </head>
 <body>
+    <!-- Gradient background -->
+    <div class="bg-gradient"></div>
+    
+    <!-- Hiệu ứng nền particles -->
+    <div class="bg-particles" id="particles"></div>
+    
+    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
+    <div class="light-effect" id="lightEffect"></div>
+    
+    <!-- Language switcher -->
+    <div class="language-switcher">
+        <button class="language-btn active" id="enBtn">English</button>
+        <button class="language-btn" id="viBtn">Tiếng Việt</button>
+    </div>
+    
+    <!-- Nội dung chính -->
     <div class="container">
-        <header>
-            <h1>CLIENT/EXECUTOR</h1>
-            <a href="index.html" class="back-btn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                <span>Quay lại Trang chủ</span>
-            </a>
-        </header>
-
-        <main>
-            <h2>Executor Phổ Biến</h2>
-            
-            <div class="executor-card">
-                <div class="executor-header">
-                    <input type="checkbox" class="executor-checkbox" id="synapseCheckbox" checked disabled>
-                    <label for="synapseCheckbox" class="executor-name">Synapse X</label>
-                    <span class="executor-status">Hoạt động</span>
-                </div>
-                <div class="executor-update">Cập nhật cuối: 15/11/2023</div>
-                <p class="executor-description">
-                    Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.
-                </p>
+        <a href="index.html" class="back-btn" id="backBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span id="backText">Back to Home</span>
+        </a>
+        
+        <h1 id="mainTitle">CLIENT/EXECUTOR</h1>
+        
+        <div class="executor-list">
+            <div class="executor-category">
+                <h2 class="category-title" id="category1Title">Executor Phổ Biến</h2>
                 
-                <div class="download-section">
-                    <h3 class="download-title">Tải xuống</h3>
-                    <a href="https://xfearyzer.github.io" class="download-link">xfearyzer.github.io</a>
+                <!-- Executor 1 -->
+                <div class="executor-item">
+                    <div class="executor-header">
+                        <input type="checkbox" class="executor-checkbox" id="executor1" checked disabled>
+                        <label for="executor1" class="executor-name">Synapse X</label>
+                        <div class="executor-status">
+                            <div class="status-indicator status-working"></div>
+                            <span class="status-text" id="status1Text">Working</span>
+                        </div>
+                    </div>
+                    <div class="last-update" id="update1Text">Last Update: 2023-11-15</div>
+                    <p class="executor-description" id="desc1Text">Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.</p>
+                    
+                    <div class="download-section">
+                        <h3 class="download-title" id="downloadTitle1">Download</h3>
+                        <a href="https://xfearyzer.github.io" class="download-btn" id="downloadBtn1">xfearyzer.github.io</a>
+                    </div>
+                </div>
+                
+                <!-- Executor 2 -->
+                <div class="executor-item">
+                    <div class="executor-header">
+                        <input type="checkbox" class="executor-checkbox" id="executor2">
+                        <label for="executor2" class="executor-name">Krnl</label>
+                        <div class="executor-status">
+                            <div class="status-indicator status-down"></div>
+                            <span class="status-text" id="status2Text">Down</span>
+                        </div>
+                    </div>
+                    <div class="last-update" id="update2Text">Last Update: 2023-10-28</div>
+                    <p class="executor-description" id="desc2Text">Free and powerful executor with key system and regular updates.</p>
+                    
+                    <div class="download-section">
+                        <h3 class="download-title" id="downloadTitle2">Download</h3>
+                        <a href="https://krnl.place" class="download-btn" id="downloadBtn2">krnl.place</a>
+                    </div>
                 </div>
             </div>
-
-            <div class="executor-card">
-                <div class="executor-header">
-                    <input type="checkbox" class="executor-checkbox" id="krnlCheckbox">
-                    <label for="krnlCheckbox" class="executor-name">Krnl</label>
-                    <span class="executor-status" style="background-color: rgba(244, 67, 54, 0.2); color: var(--danger-color);">
-                        Tạm ngừng
-                    </span>
-                </div>
-                <div class="executor-update">Cập nhật cuối: 10/11/2023</div>
-                <p class="executor-description">
-                    Executor miễn phí với nhiều tính năng mạnh mẽ, hỗ trợ script phức tạp.
-                </p>
-                
-                <div class="download-section">
-                    <h3 class="download-title">Tải xuống</h3>
-                    <a href="https://krnl.place" class="download-link">krnl.place</a>
-                </div>
-            </div>
-        </main>
+        </div>
     </div>
 
     <script>
-        // Có thể thêm các tính năng JavaScript nếu cần
-        document.querySelectorAll('.executor-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const card = this.closest('.executor-card');
-                if (this.checked) {
-                    card.style.borderLeftColor = 'var(--primary-color)';
-                } else {
-                    card.style.borderLeftColor = 'var(--text-muted)';
+        // Tạo hiệu ứng particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 15 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random kích thước
+                const size = Math.random() * 15 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random vị trí
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.2 + 0.1;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Hiệu ứng ánh sáng di chuyển theo chuột
+        function setupLightEffect() {
+            const light = document.getElementById('lightEffect');
+            document.addEventListener('mousemove', (e) => {
+                light.style.left = `${e.clientX - 150}px`;
+                light.style.top = `${e.clientY - 150}px`;
+            });
+        }
+
+        // Đối tượng chứa các ngôn ngữ
+        const languages = {
+            en: {
+                mainTitle: "CLIENT/EXECUTOR",
+                backText: "Back to Home",
+                category1Title: "Popular Executors",
+                status1Text: "Working",
+                status2Text: "Down",
+                update1Text: "Last Update: 2023-11-15",
+                update2Text: "Last Update: 2023-10-28",
+                desc1Text: "The most popular and powerful executor with advanced features and regular updates.",
+                desc2Text: "Free and powerful executor with key system and regular updates.",
+                downloadTitle1: "Download",
+                downloadTitle2: "Download",
+                downloadBtn1: "xfearyzer.github.io",
+                downloadBtn2: "krnl.place"
+            },
+            vi: {
+                mainTitle: "CLIENT/EXECUTOR",
+                backText: "Quay lại Trang chủ",
+                category1Title: "Executor Phổ Biến",
+                status1Text: "Hoạt động",
+                status2Text: "Ngừng hoạt động",
+                update1Text: "Cập nhật cuối: 15/11/2023",
+                update2Text: "Cập nhật cuối: 28/10/2023",
+                desc1Text: "Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.",
+                desc2Text: "Executor miễn phí mạnh mẽ với hệ thống key và cập nhật thường xuyên.",
+                downloadTitle1: "Tải xuống",
+                downloadTitle2: "Tải xuống",
+                downloadBtn1: "xfearyzer.github.io",
+                downloadBtn2: "krnl.place"
+            }
+        };
+        
+        // Các phần tử cần thay đổi ngôn ngữ
+        const elements = {
+            mainTitle: document.getElementById('mainTitle'),
+            backText: document.getElementById('backText'),
+            category1Title: document.getElementById('category1Title'),
+            status1Text: document.getElementById('status1Text'),
+            status2Text: document.getElementById('status2Text'),
+            update1Text: document.getElementById('update1Text'),
+            update2Text: document.getElementById('update2Text'),
+            desc1Text: document.getElementById('desc1Text'),
+            desc2Text: document.getElementById('desc2Text'),
+            downloadTitle1: document.getElementById('downloadTitle1'),
+            downloadTitle2: document.getElementById('downloadTitle2'),
+            downloadBtn1: document.getElementById('downloadBtn1'),
+            downloadBtn2: document.getElementById('downloadBtn2')
+        };
+        
+        // Nút chuyển ngôn ngữ
+        const enBtn = document.getElementById('enBtn');
+        const viBtn = document.getElementById('viBtn');
+        
+        // Chuyển đổi ngôn ngữ
+        function changeLanguage(lang) {
+            // Cập nhật nút active
+            enBtn.classList.toggle('active', lang === 'en');
+            viBtn.classList.toggle('active', lang === 'vi');
+            
+            // Cập nhật nội dung
+            for (const [key, element] of Object.entries(elements)) {
+                if (element) {
+                    element.textContent = languages[lang][key];
                 }
+            }
+            
+            // Lưu ngôn ngữ vào localStorage
+            localStorage.setItem('language', lang);
+        }
+        
+        // Sự kiện click nút
+        enBtn.addEventListener('click', () => changeLanguage('en'));
+        viBtn.addEventListener('click', () => changeLanguage('vi'));
+        
+        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
+        function detectLanguage() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang) return savedLang;
+            
+            const browserLang = navigator.language || navigator.userLanguage;
+            return browserLang.startsWith('vi') ? 'vi' : 'en';
+        }
+        
+        // Áp dụng ngôn ngữ khi tải trang
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupLightEffect();
+            const lang = detectLanguage();
+            changeLanguage(lang);
+            
+            // Thêm sự kiện cho checkbox
+            document.querySelectorAll('.executor-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const executorItem = this.closest('.executor-item');
+                    if (this.checked) {
+                        executorItem.style.borderLeftColor = '#6a5acd';
+                    } else {
+                        executorItem.style.borderLeftColor = '#a0a0c0';
+                    }
+                });
             });
         });
     </script>
