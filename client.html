@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client/Executor | Advanced Toolkit</title>
+    <style>
+        /* Reset và font chữ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0a0a12;
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+        
+        /* Gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 30%, #1a1a2e 0%, #0a0a12 70%);
+            z-index: -2;
+        }
+        
+        /* Language switcher */
+        .language-switcher {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px 30px;
+            background-color: rgba(10, 10, 18, 0.8);
+            z-index: 100;
+            position: relative;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(90, 90, 120, 0.2);
+        }
+        
+        .language-btn {
+            background: none;
+            border: 1px solid #6a5acd;
+            color: #b8b8d0;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .language-btn:hover {
+            background-color: #6a5acd;
+            color: white;
+        }
+        
+        .language-btn.active {
+            background-color: #6a5acd;
+            color: white;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.5);
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+            margin: auto;
+            flex: 1;
+        }
+        
+        h1 {
+            color: #b8b8d0;
+            margin: 30px 0;
+            font-size: 2.8rem;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #6a5acd, transparent);
+        }
+        
+        /* Hiệu ứng nền động */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background-color: rgba(106, 90, 205, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
+        }
+        
+        /* Hiệu ứng ánh sáng */
+        .light-effect {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(106, 90, 205, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+            transition: transform 0.1s ease;
+        }
+        
+        /* Executor Cards */
+        .executors-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .executor-category {
+            margin-bottom: 20px;
+        }
+        
+        .category-title {
+            font-size: 1.8rem;
+            color: #d0d0f0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(106, 90, 205, 0.3);
+        }
+        
+        .executors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .executor-card {
+            background: rgba(20, 20, 35, 0.6);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(90, 90, 120, 0.1);
+            backdrop-filter: blur(5px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .executor-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(106, 90, 205, 0.4);
+            border-color: rgba(106, 90, 205, 0.3);
+            background: rgba(30, 30, 50, 0.7);
+        }
+        
+        .executor-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .executor-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 1px solid rgba(106, 90, 205, 0.3);
+        }
+        
+        .executor-name {
+            font-size: 1.5rem;
+            color: #d0d0f0;
+            font-weight: 500;
+        }
+        
+        .executor-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .status-working {
+            background-color: #4caf50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        }
+        
+        .status-down {
+            background-color: #f44336;
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+        
+        .status-text {
+            font-size: 0.9rem;
+        }
+        
+        .last-update {
+            font-size: 0.85rem;
+            color: #a0a0c0;
+            margin-top: 5px;
+        }
+        
+        .executor-description {
+            color: #a0a0c0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            padding: 10px 25px;
+            background: linear-gradient(90deg, #6a5acd, #9370db);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        
+        .download-btn:hover {
+            background: linear-gradient(90deg, #5a4acd, #8360db);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* Back button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #b8b8d0;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            color: #d0d0f0;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .executors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .executor-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .executor-name {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Gradient background -->
+    <div class="bg-gradient"></div>
+    
+    <!-- Hiệu ứng nền particles -->
+    <div class="bg-particles" id="particles"></div>
+    
+    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
+    <div class="light-effect" id="lightEffect"></div>
+    
+    <!-- Language switcher -->
+    <div class="language-switcher">
+        <button class="language-btn active" id="enBtn">English</button>
+        <button class="language-btn" id="viBtn">Tiếng Việt</button>
+    </div>
+    
+    <!-- Nội dung chính -->
+    <div class="container">
+        <a href="index.html" class="back-btn" id="backBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span id="backText">Back to Home</span>
+        </a>
+        
+        <h1 id="mainTitle">Client/Executor</h1>
+        
+        <div class="executors-container">
+            <!-- Category 1 -->
+            <div class="executor-category">
+                <h2 class="category-title" id="category1Title">Popular Executors</h2>
+                <div class="executors-grid">
+                    <!-- Executor 1 -->
+                    <div class="executor-card">
+                        <div class="executor-header">
+                            <img src="https://via.placeholder.com/60" alt="Executor Logo" class="executor-logo">
+                            <div>
+                                <h3 class="executor-name">Synapse X</h3>
+                                <div class="executor-status">
+                                    <div class="status-indicator status-working"></div>
+                                    <span class="status-text" id="status1Text">Working</span>
+                                </div>
+                                <div class="last-update" id="update1Text">Last Update: 2023-11-15</div>
+                            </div>
+                        </div>
+                        <p class="executor-description" id="desc1Text">The most popular and powerful Roblox executor with advanced features and regular updates.</p>
+                        <a href="https://x.synapse.to/" class="download-btn" id="download1Text">Download</a>
+                    </div>
+                    
+                    <!-- Executor 2 -->
+                    <div class="executor-card">
+                        <div class="executor-header">
+                            <img src="https://via.placeholder.com/60" alt="Executor Logo" class="executor-logo">
+                            <div>
+                                <h3 class="executor-name">Script-Ware</h3>
+                                <div class="executor-status">
+                                    <div class="status-indicator status-working"></div>
+                                    <span class="status-text" id="status2Text">Working</span>
+                                </div>
+                                <div class="last-update" id="update2Text">Last Update: 2023-11-10</div>
+                            </div>
+                        </div>
+                        <p class="executor-description" id="desc2Text">Cross-platform Roblox executor with MacOS support and powerful scripting capabilities.</p>
+                        <a href="https://script-ware.com/" class="download-btn" id="download2Text">Download</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Category 2 -->
+            <div class="executor-category">
+                <h2 class="category-title" id="category2Title">Other Executors</h2>
+                <div class="executors-grid">
+                    <!-- Executor 3 -->
+                    <div class="executor-card">
+                        <div class="executor-header">
+                            <img src="https://via.placeholder.com/60" alt="Executor Logo" class="executor-logo">
+                            <div>
+                                <h3 class="executor-name">Krnl</h3>
+                                <div class="executor-status">
+                                    <div class="status-indicator status-down"></div>
+                                    <span class="status-text" id="status3Text">Down</span>
+                                </div>
+                                <div class="last-update" id="update3Text">Last Update: 2023-10-28</div>
+                            </div>
+                        </div>
+                        <p class="executor-description" id="desc3Text">Free and powerful executor with key system and regular updates.</p>
+                        <a href="https://krnl.place/" class="download-btn" id="download3Text">Download</a>
+                    </div>
+                    
+                    <!-- Executor 4 -->
+                    <div class="executor-card">
+                        <div class="executor-header">
+                            <img src="https://via.placeholder.com/60" alt="Executor Logo" class="executor-logo">
+                            <div>
+                                <h3 class="executor-name">Fluxus</h3>
+                                <div class="executor-status">
+                                    <div class="status-indicator status-working"></div>
+                                    <span class="status-text" id="status4Text">Working</span>
+                                </div>
+                                <div class="last-update" id="update4Text">Last Update: 2023-11-05</div>
+                            </div>
+                        </div>
+                        <p class="executor-description" id="desc4Text">Mobile and PC executor with easy-to-use interface and good performance.</p>
+                        <a href="https://fluxteam.net/" class="download-btn" id="download4Text">Download</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tạo hiệu ứng particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = window.innerWidth < 768 ? 15 : 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random kích thước
+                const size = Math.random() * 15 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random vị trí
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random opacity
+                particle.style.opacity = Math.random() * 0.2 + 0.1;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Hiệu ứng ánh sáng di chuyển theo chuột
+        function setupLightEffect() {
+            const light = document.getElementById('lightEffect');
+            document.addEventListener('mousemove', (e) => {
+                light.style.left = `${e.clientX - 150}px`;
+                light.style.top = `${e.clientY - 150}px`;
+            });
+        }
+        
+        // Đối tượng chứa các ngôn ngữ
+        const languages = {
+            en: {
+                mainTitle: "Client/Executor",
+                backText: "Back to Home",
+                category1Title: "Popular Executors",
+                category2Title: "Other Executors",
+                status1Text: "Working",
+                status2Text: "Working",
+                status3Text: "Down",
+                status4Text: "Working",
+                update1Text: "Last Update: 2023-11-15",
+                update2Text: "Last Update: 2023-11-10",
+                update3Text: "Last Update: 2023-10-28",
+                update4Text: "Last Update: 2023-11-05",
+                desc1Text: "The most popular and powerful Roblox executor with advanced features and regular updates.",
+                desc2Text: "Cross-platform Roblox executor with MacOS support and powerful scripting capabilities.",
+                desc3Text: "Free and powerful executor with key system and regular updates.",
+                desc4Text: "Mobile and PC executor with easy-to-use interface and good performance.",
+                download1Text: "Download",
+                download2Text: "Download",
+                download3Text: "Download",
+                download4Text: "Download"
+            },
+            vi: {
+                mainTitle: "Client/Executor",
+                backText: "Quay lại Trang chủ",
+                category1Title: "Executor Phổ Biến",
+                category2Title: "Executor Khác",
+                status1Text: "Hoạt động",
+                status2Text: "Hoạt động",
+                status3Text: "Ngừng hoạt động",
+                status4Text: "Hoạt động",
+                update1Text: "Cập nhật cuối: 15/11/2023",
+                update2Text: "Cập nhật cuối: 10/11/2023",
+                update3Text: "Cập nhật cuối: 28/10/2023",
+                update4Text: "Cập nhật cuối: 05/11/2023",
+                desc1Text: "Executor Roblox mạnh mẽ và phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.",
+                desc2Text: "Executor Roblox đa nền tảng hỗ trợ MacOS với khả năng scripting mạnh mẽ.",
+                desc3Text: "Executor miễn phí mạnh mẽ với hệ thống key và cập nhật thường xuyên.",
+                desc4Text: "Executor cho di động và PC với giao diện dễ sử dụng và hiệu năng tốt.",
+                download1Text: "Tải xuống",
+                download2Text: "Tải xuống",
+                download3Text: "Tải xuống",
+                download4Text: "Tải xuống"
+            }
+        };
+        
+        // Các phần tử cần thay đổi ngôn ngữ
+        const elements = {
+            mainTitle: document.getElementById('mainTitle'),
+            backText: document.getElementById('backText'),
+            category1Title: document.getElementById('category1Title'),
+            category2Title: document.getElementById('category2Title'),
+            status1Text: document.getElementById('status1Text'),
+            status2Text: document.getElementById('status2Text'),
+            status3Text: document.getElementById('status3Text'),
+            status4Text: document.getElementById('status4Text'),
+            update1Text: document.getElementById('update1Text'),
+            update2Text: document.getElementById('update2Text'),
+            update3Text: document.getElementById('update3Text'),
+            update4Text: document.getElementById('update4Text'),
+            desc1Text: document.getElementById('desc1Text'),
+            desc2Text: document.getElementById('desc2Text'),
+            desc3Text: document.getElementById('desc3Text'),
+            desc4Text: document.getElementById('desc4Text'),
+            download1Text: document.getElementById('download1Text'),
+            download2Text: document.getElementById('download2Text'),
+            download3Text: document.getElementById('download3Text'),
+            download4Text: document.getElementById('download4Text')
+        };
+        
+        // Nút chuyển ngôn ngữ
+        const enBtn = document.getElementById('enBtn');
+        const viBtn = document.getElementById('viBtn');
+        
+        // Chuyển đổi ngôn ngữ
+        function changeLanguage(lang) {
+            // Cập nhật nút active
+            enBtn.classList.toggle('active', lang === 'en');
+            viBtn.classList.toggle('active', lang === 'vi');
+            
+            // Cập nhật nội dung
+            for (const [key, element] of Object.entries(elements)) {
+                if (element) {
+                    element.textContent = languages[lang][key];
+                }
+            }
+            
+            // Lưu ngôn ngữ vào localStorage
+            localStorage.setItem('language', lang);
+        }
+        
+        // Sự kiện click nút
+        enBtn.addEventListener('click', () => changeLanguage('en'));
+        viBtn.addEventListener('click', () => changeLanguage('vi'));
+        
+        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
+        function detectLanguage() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang) return savedLang;
+            
+            const browserLang = navigator.language || navigator.userLanguage;
+            return browserLang.startsWith('vi') ? 'vi' : 'en';
+        }
+        
+        // Áp dụng ngôn ngữ khi tải trang
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupLightEffect();
+            const lang = detectLanguage();
+            changeLanguage(lang);
+        });
+    </script>
+</body>
+</html>
