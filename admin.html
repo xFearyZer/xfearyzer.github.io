@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Executor Management</title>
+    <title>Executor Management | Advanced Toolkit</title>
     <style>
+        /* Giữ nguyên toàn bộ style từ admin.html ban đầu */
         :root {
             --primary-color: #6a5acd;
             --secondary-color: #9370db;
@@ -413,6 +414,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Status</th>
+                            <th>Category</th>
                             <th>Last Updated</th>
                             <th>Actions</th>
                         </tr>
@@ -474,7 +476,7 @@
     </div>
 
     <script>
-        // Sample data - in a real app, this would come from a database
+        // Data structure tương thích với executor.html
         let executors = [
             {
                 id: 1,
@@ -482,28 +484,18 @@
                 image: "https://via.placeholder.com/100",
                 status: "working",
                 category: "popular",
-                url: "https://x.synapse.to/",
-                description: "The most popular and powerful Roblox executor",
+                url: "https://xfearyzer.github.io",
+                description: "Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.",
                 lastUpdated: "2023-11-15"
             },
             {
                 id: 2,
-                name: "Script-Ware",
-                image: "https://via.placeholder.com/100",
-                status: "working",
-                category: "popular",
-                url: "https://script-ware.com/",
-                description: "Cross-platform Roblox executor with MacOS support",
-                lastUpdated: "2023-11-10"
-            },
-            {
-                id: 3,
                 name: "Krnl",
                 image: "https://via.placeholder.com/100",
                 status: "down",
                 category: "other",
-                url: "https://krnl.place/",
-                description: "Free and powerful executor with key system",
+                url: "https://krnl.place",
+                description: "Free and powerful executor with key system and regular updates.",
                 lastUpdated: "2023-10-28"
             }
         ];
@@ -518,7 +510,7 @@
         const searchInput = document.getElementById('searchInput');
         const statusFilter = document.getElementById('statusFilter');
 
-        // Check if user is logged in (in a real app, this would check session/token)
+        // Check authentication
         function checkAuth() {
             const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
             if (isLoggedIn) {
@@ -536,7 +528,7 @@
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            // Very basic validation (in a real app, this would call an API)
+            // Basic authentication (in production, use proper authentication)
             if (username === 'admin' && password === 'admin123') {
                 localStorage.setItem('isLoggedIn', 'true');
                 checkAuth();
@@ -566,20 +558,16 @@
             });
             
             if (filteredExecutors.length === 0) {
-                executorsTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No executors found</td></tr>';
+                executorsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No executors found</td></tr>';
                 return;
             }
             
             filteredExecutors.forEach(executor => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img src="${executor.image}" alt="${executor.name}" style="width: 40px; height: 40px; border-radius: 5px;">
-                            ${executor.name}
-                        </div>
-                    </td>
+                    <td>${executor.name}</td>
                     <td><span class="status-badge status-${executor.status}">${executor.status === 'working' ? 'Working' : 'Down'}</span></td>
+                    <td>${executor.category === 'popular' ? 'Popular' : 'Other'}</td>
                     <td>${executor.lastUpdated}</td>
                     <td>
                         <button class="action-btn edit-btn" onclick="editExecutor(${executor.id})">Edit</button>
@@ -590,7 +578,7 @@
             });
         }
 
-        // Open modal to add new executor
+        // Open modal to add/edit executor
         function openAddExecutorModal() {
             document.getElementById('executorId').value = '';
             document.getElementById('executorName').value = '';
@@ -603,7 +591,6 @@
             executorModal.classList.add('active');
         }
 
-        // Edit executor
         function editExecutor(id) {
             const executor = executors.find(e => e.id === id);
             if (!executor) return;
@@ -623,6 +610,7 @@
         function deleteExecutor(id) {
             if (confirm('Are you sure you want to delete this executor?')) {
                 executors = executors.filter(e => e.id !== id);
+                saveToLocalStorage();
                 loadExecutors();
             }
         }
@@ -643,6 +631,19 @@
                     preview.src = e.target.result;
                 }
                 reader.readAsDataURL(file);
+            }
+        }
+
+        // Save data to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem('executorsData', JSON.stringify(executors));
+        }
+
+        // Load data from localStorage
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('executorsData');
+            if (savedData) {
+                executors = JSON.parse(savedData);
             }
         }
 
@@ -690,6 +691,7 @@
                 });
             }
             
+            saveToLocalStorage();
             loadExecutors();
             closeModal();
         });
@@ -699,6 +701,7 @@
         statusFilter.addEventListener('change', loadExecutors);
 
         // Initialize
+        loadFromLocalStorage();
         checkAuth();
     </script>
 </body>
