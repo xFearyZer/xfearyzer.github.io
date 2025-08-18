@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Client/Executor | XFearyzer</title>
+    <style>
+        :root {
+            --primary-color: #6a5acd;
+            --secondary-color: #9370db;
+            --dark-bg: #0a0a12;
+            --card-bg: rgba(20, 20, 35, 0.6);
+            --text-light: #e0e0e0;
+            --text-muted: #a0a0c0;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            margin: 30px 0 20px;
+            border-bottom: 2px solid rgba(106, 90, 205, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .executor-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid var(--primary-color);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .executor-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .executor-checkbox {
+            margin-right: 15px;
+            transform: scale(1.5);
+        }
+
+        .executor-name {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .executor-status {
+            display: inline-block;
+            margin-left: 15px;
+            font-size: 0.9rem;
+            padding: 3px 10px;
+            border-radius: 20px;
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .executor-update {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 5px 0 15px 35px;
+        }
+
+        .executor-description {
+            margin-left: 35px;
+            margin-bottom: 20px;
+        }
+
+        .download-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed rgba(106, 90, 205, 0.3);
+        }
+
+        .download-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: var(--secondary-color);
+        }
+
+        .download-link {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .download-link:hover {
+            background: linear-gradient(90deg, #5a4acd, #8360db);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: var(--secondary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .executor-name {
+                font-size: 1.3rem;
+            }
+            
+            .executor-checkbox {
+                transform: scale(1.2);
+                margin-right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CLIENT/EXECUTOR</h1>
+            <a href="index.html" class="back-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Quay lại Trang chủ</span>
+            </a>
+        </header>
+
+        <main>
+            <h2>Executor Phổ Biến</h2>
+            
+            <div class="executor-card">
+                <div class="executor-header">
+                    <input type="checkbox" class="executor-checkbox" id="synapseCheckbox" checked disabled>
+                    <label for="synapseCheckbox" class="executor-name">Synapse X</label>
+                    <span class="executor-status">Hoạt động</span>
+                </div>
+                <div class="executor-update">Cập nhật cuối: 15/11/2023</div>
+                <p class="executor-description">
+                    Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.
+                </p>
+                
+                <div class="download-section">
+                    <h3 class="download-title">Tải xuống</h3>
+                    <a href="https://xfearyzer.github.io" class="download-link">xfearyzer.github.io</a>
+                </div>
+            </div>
+
+            <div class="executor-card">
+                <div class="executor-header">
+                    <input type="checkbox" class="executor-checkbox" id="krnlCheckbox">
+                    <label for="krnlCheckbox" class="executor-name">Krnl</label>
+                    <span class="executor-status" style="background-color: rgba(244, 67, 54, 0.2); color: var(--danger-color);">
+                        Tạm ngừng
+                    </span>
+                </div>
+                <div class="executor-update">Cập nhật cuối: 10/11/2023</div>
+                <p class="executor-description">
+                    Executor miễn phí với nhiều tính năng mạnh mẽ, hỗ trợ script phức tạp.
+                </p>
+                
+                <div class="download-section">
+                    <h3 class="download-title">Tải xuống</h3>
+                    <a href="https://krnl.place" class="download-link">krnl.place</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Có thể thêm các tính năng JavaScript nếu cần
+        document.querySelectorAll('.executor-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const card = this.closest('.executor-card');
+                if (this.checked) {
+                    card.style.borderLeftColor = 'var(--primary-color)';
+                } else {
+                    card.style.borderLeftColor = 'var(--text-muted)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
