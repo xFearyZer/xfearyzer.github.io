@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executor Management</title>
+    <style>
+        :root {
+            --primary-color: #6a5acd;
+            --secondary-color: #9370db;
+            --dark-bg: #0a0a12;
+            --card-bg: rgba(20, 20, 35, 0.6);
+            --text-light: #e0e0e0;
+            --text-muted: #a0a0c0;
+            --success-color: #4caf50;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(106, 90, 205, 0.3);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #5a4acd, #8360db);
+            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #e53935;
+        }
+
+        /* Admin Panel Layout */
+        .admin-panel {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 10px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: rgba(106, 90, 205, 0.3);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        /* Search and Filter */
+        .search-filter {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .search-box {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border-radius: 5px;
+            border: 1px solid rgba(106, 90, 205, 0.3);
+            background-color: rgba(10, 10, 18, 0.8);
+            color: var(--text-light);
+        }
+
+        .search-box::before {
+            content: "🔍";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(106, 90, 205, 0.3);
+            background-color: rgba(10, 10, 18, 0.8);
+            color: var(--text-light);
+            min-width: 150px;
+        }
+
+        /* Executors Table */
+        .executors-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .executors-table th, .executors-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(106, 90, 205, 0.1);
+        }
+
+        .executors-table th {
+            background-color: rgba(106, 90, 205, 0.2);
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .executors-table tr:hover {
+            background-color: rgba(106, 90, 205, 0.1);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-working {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--success-color);
+        }
+
+        .status-down {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        .action-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+            border: none;
+            font-size: 0.8rem;
+        }
+
+        .edit-btn {
+            background-color: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+        }
+
+        .delete-btn {
+            background-color: rgba(244, 67, 54, 0.2);
+            color: var(--danger-color);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transform: translateY(-30px);
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: var(--text-light);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(106, 90, 205, 0.3);
+            background-color: rgba(10, 10, 18, 0.8);
+            color: var(--text-light);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 5px;
+            border: 1px solid rgba(106, 90, 205, 0.3);
+            background-color: rgba(10, 10, 18, 0.8);
+            color: var(--text-light);
+            appearance: none;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        /* Preview Image */
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 5px;
+            object-fit: cover;
+            border: 1px solid rgba(106, 90, 205, 0.3);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at 20% 30%, #1a1a2e 0%, #0a0a12 70%);
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .login-title {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .admin-panel {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page (hidden by default) -->
+    <div class="login-container" id="loginPage">
+        <div class="login-box">
+            <h2 class="login-title">Admin Login</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-control" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Enter password">
+            </div>
+            <button class="btn btn-primary" style="width: 100%;" onclick="login()">Login</button>
+        </div>
+    </div>
+
+    <!-- Admin Panel (hidden by default) -->
+    <div class="container" id="adminPanel" style="display: none;">
+        <header>
+            <h1>Executor Management</h1>
+            <button class="btn btn-danger" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="admin-panel">
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="active">Executors</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Settings</a></li>
+                </ul>
+            </div>
+
+            <div class="main-content">
+                <div class="search-filter">
+                    <div class="search-box">
+                        <input type="text" placeholder="Search executors..." id="searchInput">
+                    </div>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="working">Working</option>
+                        <option value="down">Down</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="openAddExecutorModal()">Add Executor</button>
+                </div>
+
+                <table class="executors-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="executorsTableBody">
+                        <!-- Executors will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Executor Modal -->
+    <div class="modal-overlay" id="executorModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Executor</h3>
+                <button class="close-modal" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="executorForm">
+                <input type="hidden" id="executorId">
+                <div class="form-group">
+                    <label for="executorName">Executor Name</label>
+                    <input type="text" id="executorName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="executorImage">Executor Image</label>
+                    <img src="https://via.placeholder.com/100" alt="Preview" class="image-preview" id="imagePreview">
+                    <input type="file" id="executorImage" class="form-control" accept="image/*" onchange="previewImage(this)">
+                </div>
+                <div class="form-group">
+                    <label for="executorStatus">Status</label>
+                    <select id="executorStatus" class="form-select">
+                        <option value="working">Working</option>
+                        <option value="down">Down</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="executorCategory">Category</label>
+                    <select id="executorCategory" class="form-select">
+                        <option value="popular">Popular</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="executorUrl">Download URL</label>
+                    <input type="url" id="executorUrl" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="executorDescription">Description</label>
+                    <textarea id="executorDescription" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Executor</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data - in a real app, this would come from a database
+        let executors = [
+            {
+                id: 1,
+                name: "Synapse X",
+                image: "https://via.placeholder.com/100",
+                status: "working",
+                category: "popular",
+                url: "https://x.synapse.to/",
+                description: "The most popular and powerful Roblox executor",
+                lastUpdated: "2023-11-15"
+            },
+            {
+                id: 2,
+                name: "Script-Ware",
+                image: "https://via.placeholder.com/100",
+                status: "working",
+                category: "popular",
+                url: "https://script-ware.com/",
+                description: "Cross-platform Roblox executor with MacOS support",
+                lastUpdated: "2023-11-10"
+            },
+            {
+                id: 3,
+                name: "Krnl",
+                image: "https://via.placeholder.com/100",
+                status: "down",
+                category: "other",
+                url: "https://krnl.place/",
+                description: "Free and powerful executor with key system",
+                lastUpdated: "2023-10-28"
+            }
+        ];
+
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const adminPanel = document.getElementById('adminPanel');
+        const executorsTableBody = document.getElementById('executorsTableBody');
+        const executorModal = document.getElementById('executorModal');
+        const executorForm = document.getElementById('executorForm');
+        const modalTitle = document.getElementById('modalTitle');
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+
+        // Check if user is logged in (in a real app, this would check session/token)
+        function checkAuth() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+            if (isLoggedIn) {
+                loginPage.style.display = 'none';
+                adminPanel.style.display = 'block';
+                loadExecutors();
+            } else {
+                loginPage.style.display = 'flex';
+                adminPanel.style.display = 'none';
+            }
+        }
+
+        // Login function
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            // Very basic validation (in a real app, this would call an API)
+            if (username === 'admin' && password === 'admin123') {
+                localStorage.setItem('isLoggedIn', 'true');
+                checkAuth();
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            checkAuth();
+        }
+
+        // Load executors into table
+        function loadExecutors() {
+            executorsTableBody.innerHTML = '';
+            
+            const searchTerm = searchInput.value.toLowerCase();
+            const statusFilterValue = statusFilter.value;
+            
+            const filteredExecutors = executors.filter(executor => {
+                const matchesSearch = executor.name.toLowerCase().includes(searchTerm) || 
+                                     executor.description.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilterValue === 'all' || executor.status === statusFilterValue;
+                return matchesSearch && matchesStatus;
+            });
+            
+            if (filteredExecutors.length === 0) {
+                executorsTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No executors found</td></tr>';
+                return;
+            }
+            
+            filteredExecutors.forEach(executor => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img src="${executor.image}" alt="${executor.name}" style="width: 40px; height: 40px; border-radius: 5px;">
+                            ${executor.name}
+                        </div>
+                    </td>
+                    <td><span class="status-badge status-${executor.status}">${executor.status === 'working' ? 'Working' : 'Down'}</span></td>
+                    <td>${executor.lastUpdated}</td>
+                    <td>
+                        <button class="action-btn edit-btn" onclick="editExecutor(${executor.id})">Edit</button>
+                        <button class="action-btn delete-btn" onclick="deleteExecutor(${executor.id})">Delete</button>
+                    </td>
+                `;
+                executorsTableBody.appendChild(row);
+            });
+        }
+
+        // Open modal to add new executor
+        function openAddExecutorModal() {
+            document.getElementById('executorId').value = '';
+            document.getElementById('executorName').value = '';
+            document.getElementById('imagePreview').src = 'https://via.placeholder.com/100';
+            document.getElementById('executorStatus').value = 'working';
+            document.getElementById('executorCategory').value = 'popular';
+            document.getElementById('executorUrl').value = '';
+            document.getElementById('executorDescription').value = '';
+            modalTitle.textContent = 'Add New Executor';
+            executorModal.classList.add('active');
+        }
+
+        // Edit executor
+        function editExecutor(id) {
+            const executor = executors.find(e => e.id === id);
+            if (!executor) return;
+            
+            document.getElementById('executorId').value = executor.id;
+            document.getElementById('executorName').value = executor.name;
+            document.getElementById('imagePreview').src = executor.image;
+            document.getElementById('executorStatus').value = executor.status;
+            document.getElementById('executorCategory').value = executor.category;
+            document.getElementById('executorUrl').value = executor.url;
+            document.getElementById('executorDescription').value = executor.description;
+            modalTitle.textContent = 'Edit Executor';
+            executorModal.classList.add('active');
+        }
+
+        // Delete executor
+        function deleteExecutor(id) {
+            if (confirm('Are you sure you want to delete this executor?')) {
+                executors = executors.filter(e => e.id !== id);
+                loadExecutors();
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            executorModal.classList.remove('active');
+        }
+
+        // Preview image before upload
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const file = input.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle form submission
+        executorForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('executorId').value;
+            const name = document.getElementById('executorName').value;
+            const image = document.getElementById('imagePreview').src;
+            const status = document.getElementById('executorStatus').value;
+            const category = document.getElementById('executorCategory').value;
+            const url = document.getElementById('executorUrl').value;
+            const description = document.getElementById('executorDescription').value;
+            
+            const today = new Date().toISOString().split('T')[0];
+            
+            if (id) {
+                // Update existing executor
+                const index = executors.findIndex(e => e.id == id);
+                if (index !== -1) {
+                    executors[index] = {
+                        id: parseInt(id),
+                        name,
+                        image,
+                        status,
+                        category,
+                        url,
+                        description,
+                        lastUpdated: today
+                    };
+                }
+            } else {
+                // Add new executor
+                const newId = executors.length > 0 ? Math.max(...executors.map(e => e.id)) + 1 : 1;
+                executors.push({
+                    id: newId,
+                    name,
+                    image,
+                    status,
+                    category,
+                    url,
+                    description,
+                    lastUpdated: today
+                });
+            }
+            
+            loadExecutors();
+            closeModal();
+        });
+
+        // Event listeners
+        searchInput.addEventListener('input', loadExecutors);
+        statusFilter.addEventListener('change', loadExecutors);
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>
