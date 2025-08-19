@@ -156,6 +156,12 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border-left: 4px solid #6a5acd;
+            transition: all 0.3s ease;
+        }
+        
+        .executor-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(106, 90, 205, 0.4);
         }
         
         .executor-header {
@@ -164,16 +170,34 @@
             margin-bottom: 15px;
         }
         
+        .executor-logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 2px solid rgba(106, 90, 205, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .executor-header-content {
+            flex-grow: 1;
+        }
+        
         .executor-checkbox {
             margin-right: 15px;
             transform: scale(1.5);
             accent-color: #6a5acd;
+            cursor: pointer;
         }
         
         .executor-name {
             font-size: 1.5rem;
             color: #d0d0f0;
             font-weight: 500;
+            display: inline-block;
+            margin-bottom: 5px;
         }
         
         .executor-status {
@@ -227,6 +251,7 @@
             font-size: 1.2rem;
             color: #b8b8d0;
             margin-bottom: 15px;
+            margin-left: 35px;
         }
         
         .download-btn {
@@ -238,6 +263,7 @@
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
+            margin-left: 35px;
         }
         
         .download-btn:hover {
@@ -271,14 +297,36 @@
                 flex-wrap: wrap;
             }
             
+            .executor-logo {
+                width: 60px;
+                height: 60px;
+                margin-right: 15px;
+            }
+            
+            .executor-checkbox {
+                transform: scale(1.3);
+                margin-right: 10px;
+            }
+            
             .executor-status {
                 margin-left: 35px;
                 margin-top: 5px;
             }
+        }
+        
+        @media (max-width: 480px) {
+            .executor-logo {
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+            }
+            
+            .executor-name {
+                font-size: 1.3rem;
+            }
             
             .executor-checkbox {
-                transform: scale(1.2);
-                margin-right: 10px;
+                transform: scale(1.1);
             }
         }
     </style>
@@ -311,52 +359,179 @@
         
         <h1 id="mainTitle">CLIENT/EXECUTOR</h1>
         
-        <div class="executor-list">
-            <div class="executor-category">
-                <h2 class="category-title" id="category1Title">Executor Phổ Biến</h2>
-                
-                <!-- Executor 1 -->
-                <div class="executor-item">
-                    <div class="executor-header">
-                        <input type="checkbox" class="executor-checkbox" id="executor1" checked disabled>
-                        <label for="executor1" class="executor-name">Synapse X</label>
-                        <div class="executor-status">
-                            <div class="status-indicator status-working"></div>
-                            <span class="status-text" id="status1Text">Working</span>
-                        </div>
-                    </div>
-                    <div class="last-update" id="update1Text">Last Update: 2023-11-15</div>
-                    <p class="executor-description" id="desc1Text">Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.</p>
-                    
-                    <div class="download-section">
-                        <h3 class="download-title" id="downloadTitle1">Download</h3>
-                        <a href="https://xfearyzer.github.io" class="download-btn" id="downloadBtn1">xfearyzer.github.io</a>
-                    </div>
-                </div>
-                
-                <!-- Executor 2 -->
-                <div class="executor-item">
-                    <div class="executor-header">
-                        <input type="checkbox" class="executor-checkbox" id="executor2">
-                        <label for="executor2" class="executor-name">Krnl</label>
-                        <div class="executor-status">
-                            <div class="status-indicator status-down"></div>
-                            <span class="status-text" id="status2Text">Down</span>
-                        </div>
-                    </div>
-                    <div class="last-update" id="update2Text">Last Update: 2023-10-28</div>
-                    <p class="executor-description" id="desc2Text">Free and powerful executor with key system and regular updates.</p>
-                    
-                    <div class="download-section">
-                        <h3 class="download-title" id="downloadTitle2">Download</h3>
-                        <a href="https://krnl.place" class="download-btn" id="downloadBtn2">krnl.place</a>
-                    </div>
-                </div>
-            </div>
+        <div class="executor-list" id="executorList">
+            <!-- Executors will be loaded here by JavaScript -->
         </div>
     </div>
 
     <script>
+        // Đối tượng chứa các ngôn ngữ
+        const languages = {
+            en: {
+                mainTitle: "CLIENT/EXECUTOR",
+                backText: "Back to Home",
+                categoryPopular: "Popular Executors",
+                categoryOther: "Other Executors",
+                statusWorking: "Working",
+                statusDown: "Down",
+                downloadText: "Download",
+                lastUpdateText: "Last Update: ",
+                noExecutors: "No executors available"
+            },
+            vi: {
+                mainTitle: "CLIENT/EXECUTOR",
+                backText: "Quay lại Trang chủ",
+                categoryPopular: "Executor Phổ Biến",
+                categoryOther: "Executor Khác",
+                statusWorking: "Hoạt động",
+                statusDown: "Ngừng hoạt động",
+                downloadText: "Tải xuống",
+                lastUpdateText: "Cập nhật cuối: ",
+                noExecutors: "Không có executor nào"
+            }
+        };
+        
+        // DOM Elements
+        const executorList = document.getElementById('executorList');
+        const enBtn = document.getElementById('enBtn');
+        const viBtn = document.getElementById('viBtn');
+        const backText = document.getElementById('backText');
+        const mainTitle = document.getElementById('mainTitle');
+        
+        // Load executors from localStorage
+        function loadExecutors() {
+            const savedData = localStorage.getItem('executorsData');
+            const currentLang = localStorage.getItem('language') || 'vi';
+            
+            if (savedData) {
+                const executors = JSON.parse(savedData);
+                renderExecutors(executors, currentLang);
+            } else {
+                // Default data if no data in localStorage
+                const defaultExecutors = [
+                    {
+                        id: 1,
+                        name: "Synapse X",
+                        image: "https://i.imgur.com/JqYeYn0.png",
+                        status: "working",
+                        category: "popular",
+                        url: "https://x.synapse.to/",
+                        description: "The most popular and powerful Roblox executor with advanced features and regular updates.",
+                        lastUpdated: "2023-11-15"
+                    },
+                    {
+                        id: 2,
+                        name: "Krnl",
+                        image: "https://i.imgur.com/mZL1zQx.png",
+                        status: "down",
+                        category: "other",
+                        url: "https://krnl.place/",
+                        description: "Free and powerful executor with key system and regular updates.",
+                        lastUpdated: "2023-10-28"
+                    }
+                ];
+                renderExecutors(defaultExecutors, currentLang);
+            }
+        }
+
+        function renderExecutors(executors, lang) {
+            executorList.innerHTML = '';
+            
+            // Nhóm theo category
+            const byCategory = {};
+            executors.forEach(executor => {
+                if (!byCategory[executor.category]) {
+                    byCategory[executor.category] = [];
+                }
+                byCategory[executor.category].push(executor);
+            });
+            
+            // Render từng category
+            for (const [category, items] of Object.entries(byCategory)) {
+                const categoryTitle = category === 'popular' 
+                    ? languages[lang].categoryPopular 
+                    : languages[lang].categoryOther;
+                
+                let categoryHTML = `
+                    <div class="executor-category">
+                        <h2 class="category-title">${categoryTitle}</h2>
+                `;
+                
+                items.forEach(executor => {
+                    categoryHTML += `
+                        <div class="executor-item" data-id="${executor.id}">
+                            <div class="executor-header">
+                                <input type="checkbox" class="executor-checkbox" id="executor${executor.id}" ${executor.status === 'working' ? 'checked' : ''}>
+                                <img src="${executor.image}" alt="${executor.name} Logo" class="executor-logo">
+                                <div class="executor-header-content">
+                                    <label for="executor${executor.id}" class="executor-name">${executor.name}</label>
+                                    <div class="executor-status">
+                                        <div class="status-indicator status-${executor.status}"></div>
+                                        <span class="status-text">${executor.status === 'working' ? languages[lang].statusWorking : languages[lang].statusDown}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="last-update">${languages[lang].lastUpdateText}${executor.lastUpdated}</div>
+                            <p class="executor-description">${executor.description}</p>
+                            
+                            <div class="download-section">
+                                <h3 class="download-title">${languages[lang].downloadText}</h3>
+                                <a href="${executor.url}" class="download-btn" target="_blank">${new URL(executor.url).hostname}</a>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                categoryHTML += `</div>`;
+                executorList.innerHTML += categoryHTML;
+            }
+            
+            if (executors.length === 0) {
+                executorList.innerHTML = `
+                    <div class="executor-category">
+                        <h2 class="category-title">${languages[lang].categoryPopular}</h2>
+                        <div class="executor-item">
+                            <p style="text-align: center;">${languages[lang].noExecutors}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Chuyển đổi ngôn ngữ
+        function changeLanguage(lang) {
+            // Cập nhật nút active
+            enBtn.classList.toggle('active', lang === 'en');
+            viBtn.classList.toggle('active', lang === 'vi');
+            
+            // Cập nhật nội dung
+            backText.textContent = languages[lang].backText;
+            mainTitle.textContent = languages[lang].mainTitle;
+            
+            // Load lại executors với ngôn ngữ mới
+            const savedData = localStorage.getItem('executorsData');
+            if (savedData) {
+                const executors = JSON.parse(savedData);
+                renderExecutors(executors, lang);
+            }
+            
+            // Lưu ngôn ngữ vào localStorage
+            localStorage.setItem('language', lang);
+        }
+        
+        // Sự kiện click nút
+        enBtn.addEventListener('click', () => changeLanguage('en'));
+        viBtn.addEventListener('click', () => changeLanguage('vi'));
+        
+        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
+        function detectLanguage() {
+            const savedLang = localStorage.getItem('language');
+            if (savedLang) return savedLang;
+            
+            const browserLang = navigator.language || navigator.userLanguage;
+            return browserLang.startsWith('vi') ? 'vi' : 'en';
+        }
+
         // Tạo hiệu ứng particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -396,108 +571,25 @@
             });
         }
 
-        // Đối tượng chứa các ngôn ngữ
-        const languages = {
-            en: {
-                mainTitle: "CLIENT/EXECUTOR",
-                backText: "Back to Home",
-                category1Title: "Popular Executors",
-                status1Text: "Working",
-                status2Text: "Down",
-                update1Text: "Last Update: 2023-11-15",
-                update2Text: "Last Update: 2023-10-28",
-                desc1Text: "The most popular and powerful executor with advanced features and regular updates.",
-                desc2Text: "Free and powerful executor with key system and regular updates.",
-                downloadTitle1: "Download",
-                downloadTitle2: "Download",
-                downloadBtn1: "xfearyzer.github.io",
-                downloadBtn2: "krnl.place"
-            },
-            vi: {
-                mainTitle: "CLIENT/EXECUTOR",
-                backText: "Quay lại Trang chủ",
-                category1Title: "Executor Phổ Biến",
-                status1Text: "Hoạt động",
-                status2Text: "Ngừng hoạt động",
-                update1Text: "Cập nhật cuối: 15/11/2023",
-                update2Text: "Cập nhật cuối: 28/10/2023",
-                desc1Text: "Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.",
-                desc2Text: "Executor miễn phí mạnh mẽ với hệ thống key và cập nhật thường xuyên.",
-                downloadTitle1: "Tải xuống",
-                downloadTitle2: "Tải xuống",
-                downloadBtn1: "xfearyzer.github.io",
-                downloadBtn2: "krnl.place"
-            }
-        };
-        
-        // Các phần tử cần thay đổi ngôn ngữ
-        const elements = {
-            mainTitle: document.getElementById('mainTitle'),
-            backText: document.getElementById('backText'),
-            category1Title: document.getElementById('category1Title'),
-            status1Text: document.getElementById('status1Text'),
-            status2Text: document.getElementById('status2Text'),
-            update1Text: document.getElementById('update1Text'),
-            update2Text: document.getElementById('update2Text'),
-            desc1Text: document.getElementById('desc1Text'),
-            desc2Text: document.getElementById('desc2Text'),
-            downloadTitle1: document.getElementById('downloadTitle1'),
-            downloadTitle2: document.getElementById('downloadTitle2'),
-            downloadBtn1: document.getElementById('downloadBtn1'),
-            downloadBtn2: document.getElementById('downloadBtn2')
-        };
-        
-        // Nút chuyển ngôn ngữ
-        const enBtn = document.getElementById('enBtn');
-        const viBtn = document.getElementById('viBtn');
-        
-        // Chuyển đổi ngôn ngữ
-        function changeLanguage(lang) {
-            // Cập nhật nút active
-            enBtn.classList.toggle('active', lang === 'en');
-            viBtn.classList.toggle('active', lang === 'vi');
-            
-            // Cập nhật nội dung
-            for (const [key, element] of Object.entries(elements)) {
-                if (element) {
-                    element.textContent = languages[lang][key];
-                }
-            }
-            
-            // Lưu ngôn ngữ vào localStorage
-            localStorage.setItem('language', lang);
-        }
-        
-        // Sự kiện click nút
-        enBtn.addEventListener('click', () => changeLanguage('en'));
-        viBtn.addEventListener('click', () => changeLanguage('vi'));
-        
-        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
-        function detectLanguage() {
-            const savedLang = localStorage.getItem('language');
-            if (savedLang) return savedLang;
-            
-            const browserLang = navigator.language || navigator.userLanguage;
-            return browserLang.startsWith('vi') ? 'vi' : 'en';
-        }
-        
-        // Áp dụng ngôn ngữ khi tải trang
+        // Khởi tạo trang
         window.addEventListener('DOMContentLoaded', () => {
             createParticles();
             setupLightEffect();
+            
             const lang = detectLanguage();
             changeLanguage(lang);
+            loadExecutors();
             
             // Thêm sự kiện cho checkbox
-            document.querySelectorAll('.executor-checkbox').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
-                    const executorItem = this.closest('.executor-item');
-                    if (this.checked) {
+            document.addEventListener('change', function(e) {
+                if (e.target.classList.contains('executor-checkbox')) {
+                    const executorItem = e.target.closest('.executor-item');
+                    if (e.target.checked) {
                         executorItem.style.borderLeftColor = '#6a5acd';
                     } else {
                         executorItem.style.borderLeftColor = '#a0a0c0';
                     }
-                });
+                }
             });
         });
     </script>
