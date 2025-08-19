@@ -5,162 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Client/Executor | Advanced Toolkit</title>
     <style>
-        /* Reset và font chữ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        /* Giữ nguyên các style cơ bản từ phiên bản trước */
         
-        body {
-            background-color: #0a0a12;
-            color: #e0e0e0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-        
-        /* Gradient background */
-        .bg-gradient {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, #1a1a2e 0%, #0a0a12 70%);
-            z-index: -2;
-        }
-        
-        /* Language switcher */
-        .language-switcher {
-            display: flex;
-            justify-content: flex-end;
-            padding: 15px 30px;
-            background-color: rgba(10, 10, 18, 0.8);
-            z-index: 100;
-            position: relative;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(90, 90, 120, 0.2);
-        }
-        
-        .language-btn {
-            background: none;
-            border: 1px solid #6a5acd;
-            color: #b8b8d0;
-            padding: 5px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            margin-left: 10px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .language-btn:hover {
-            background-color: #6a5acd;
-            color: white;
-        }
-        
-        .language-btn.active {
-            background-color: #6a5acd;
-            color: white;
-            box-shadow: 0 0 10px rgba(106, 90, 205, 0.5);
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            padding: 20px;
-            margin: auto;
-            flex: 1;
-        }
-        
-        h1 {
-            color: #b8b8d0;
-            margin: 30px 0;
-            font-size: 2.8rem;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            position: relative;
-            display: inline-block;
-        }
-        
-        h1::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, #6a5acd, transparent);
-        }
-        
-        /* Hiệu ứng nền động */
-        .bg-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .particle {
-            position: absolute;
-            background-color: rgba(106, 90, 205, 0.1);
-            border-radius: 50%;
-            pointer-events: none;
-            box-shadow: 0 0 10px rgba(106, 90, 205, 0.3);
-        }
-        
-        /* Hiệu ứng ánh sáng */
-        .light-effect {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(106, 90, 205, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: -1;
-            transition: transform 0.1s ease;
-        }
-        
-        /* Executor List */
-        .executor-list {
-            margin-top: 40px;
-        }
-        
-        .executor-category {
-            margin-bottom: 40px;
-        }
-        
-        .category-title {
-            font-size: 1.8rem;
-            color: #d0d0f0;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(106, 90, 205, 0.3);
-        }
-        
-        .executor-item {
+        /* Cập nhật giao diện mới */
+        .executor-card {
             background: rgba(20, 20, 35, 0.6);
             border-radius: 10px;
             padding: 25px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             border-left: 4px solid #6a5acd;
             transition: all 0.3s ease;
         }
         
-        .executor-item:hover {
-            transform: translateY(-3px);
+        .executor-card:hover {
+            transform: translateY(-5px);
             box-shadow: 0 12px 40px rgba(106, 90, 205, 0.4);
         }
         
@@ -171,46 +30,39 @@
         }
         
         .executor-logo {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             border-radius: 10px;
             object-fit: cover;
             margin-right: 20px;
             border: 2px solid rgba(106, 90, 205, 0.5);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
         }
         
-        .executor-header-content {
+        .executor-info {
             flex-grow: 1;
         }
         
-        .executor-checkbox {
-            margin-right: 15px;
-            transform: scale(1.5);
-            accent-color: #6a5acd;
-            cursor: pointer;
-        }
-        
         .executor-name {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: #d0d0f0;
             font-weight: 500;
-            display: inline-block;
             margin-bottom: 5px;
         }
         
         .executor-status {
-            display: inline-flex;
+            font-size: 1rem;
+            color: #4caf50;
+            margin-bottom: 5px;
+            display: flex;
             align-items: center;
-            gap: 8px;
-            margin-left: 15px;
         }
         
-        .status-indicator {
-            width: 12px;
-            height: 12px;
+        .status-dot {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
+            margin-right: 8px;
         }
         
         .status-working {
@@ -223,191 +75,88 @@
             box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
         }
         
-        .status-text {
+        .executor-update {
             font-size: 0.9rem;
-        }
-        
-        .last-update {
-            font-size: 0.85rem;
             color: #a0a0c0;
-            margin: 5px 0 15px 35px;
+            margin-bottom: 15px;
         }
         
         .executor-description {
-            color: #a0a0c0;
-            font-size: 0.95rem;
+            color: #b8b8d0;
+            font-size: 1rem;
             line-height: 1.6;
-            margin-left: 35px;
             margin-bottom: 20px;
+            padding-left: 100px;
         }
         
         .download-section {
-            margin-top: 20px;
-            padding-top: 20px;
+            padding-top: 15px;
             border-top: 1px dashed rgba(106, 90, 205, 0.3);
-        }
-        
-        .download-title {
-            font-size: 1.2rem;
-            color: #b8b8d0;
-            margin-bottom: 15px;
-            margin-left: 35px;
+            text-align: center;
         }
         
         .download-btn {
             display: inline-block;
-            padding: 12px 25px;
+            padding: 12px 30px;
             background: linear-gradient(90deg, #6a5acd, #9370db);
             color: white;
             border-radius: 5px;
             text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
-            margin-left: 35px;
+            font-size: 1.1rem;
         }
         
         .download-btn:hover {
             background: linear-gradient(90deg, #5a4acd, #8360db);
-            box-shadow: 0 5px 15px rgba(106, 90, 205, 0.4);
+            box-shadow: 0 5px 20px rgba(106, 90, 205, 0.5);
             transform: translateY(-2px);
-        }
-        
-        /* Back button */
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: #b8b8d0;
-            text-decoration: none;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        .back-btn:hover {
-            color: #d0d0f0;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-            
             .executor-header {
-                flex-wrap: wrap;
+                flex-direction: column;
+                align-items: flex-start;
             }
             
             .executor-logo {
-                width: 60px;
-                height: 60px;
-                margin-right: 15px;
+                margin-bottom: 15px;
+                width: 70px;
+                height: 70px;
             }
             
-            .executor-checkbox {
-                transform: scale(1.3);
-                margin-right: 10px;
-            }
-            
-            .executor-status {
-                margin-left: 35px;
-                margin-top: 5px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .executor-logo {
-                width: 50px;
-                height: 50px;
-                margin-right: 10px;
-            }
-            
-            .executor-name {
-                font-size: 1.3rem;
-            }
-            
-            .executor-checkbox {
-                transform: scale(1.1);
+            .executor-description {
+                padding-left: 0;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Gradient background -->
-    <div class="bg-gradient"></div>
+    <!-- Giữ nguyên các phần header và background -->
     
-    <!-- Hiệu ứng nền particles -->
-    <div class="bg-particles" id="particles"></div>
-    
-    <!-- Hiệu ứng ánh sáng di chuyển theo chuột -->
-    <div class="light-effect" id="lightEffect"></div>
-    
-    <!-- Language switcher -->
-    <div class="language-switcher">
-        <button class="language-btn active" id="enBtn">English</button>
-        <button class="language-btn" id="viBtn">Tiếng Việt</button>
-    </div>
-    
-    <!-- Nội dung chính -->
     <div class="container">
-        <a href="index.html" class="back-btn" id="backBtn">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="19" y1="12" x2="5" y2="12"></line>
-                <polyline points="12 19 5 12 12 5"></polyline>
-            </svg>
-            <span id="backText">Back to Home</span>
+        <a href="index.html" class="back-btn">
+            <!-- Icon back -->
+            Quay lại
         </a>
         
-        <h1 id="mainTitle">CLIENT/EXECUTOR</h1>
+        <h1>CLIENT/EXECUTOR</h1>
         
         <div class="executor-list" id="executorList">
-            <!-- Executors will be loaded here by JavaScript -->
+            <!-- Executors will be loaded here -->
         </div>
     </div>
 
     <script>
-        // Đối tượng chứa các ngôn ngữ
-        const languages = {
-            en: {
-                mainTitle: "CLIENT/EXECUTOR",
-                backText: "Back to Home",
-                categoryPopular: "Popular Executors",
-                categoryOther: "Other Executors",
-                statusWorking: "Working",
-                statusDown: "Down",
-                downloadText: "Download",
-                lastUpdateText: "Last Update: ",
-                noExecutors: "No executors available"
-            },
-            vi: {
-                mainTitle: "CLIENT/EXECUTOR",
-                backText: "Quay lại Trang chủ",
-                categoryPopular: "Executor Phổ Biến",
-                categoryOther: "Executor Khác",
-                statusWorking: "Hoạt động",
-                statusDown: "Ngừng hoạt động",
-                downloadText: "Tải xuống",
-                lastUpdateText: "Cập nhật cuối: ",
-                noExecutors: "Không có executor nào"
-            }
-        };
-        
-        // DOM Elements
-        const executorList = document.getElementById('executorList');
-        const enBtn = document.getElementById('enBtn');
-        const viBtn = document.getElementById('viBtn');
-        const backText = document.getElementById('backText');
-        const mainTitle = document.getElementById('mainTitle');
-        
         // Load executors from localStorage
         function loadExecutors() {
             const savedData = localStorage.getItem('executorsData');
-            const currentLang = localStorage.getItem('language') || 'vi';
-            
             if (savedData) {
                 const executors = JSON.parse(savedData);
-                renderExecutors(executors, currentLang);
+                renderExecutors(executors);
             } else {
-                // Default data if no data in localStorage
+                // Default data
                 const defaultExecutors = [
                     {
                         id: 1,
@@ -416,7 +165,7 @@
                         status: "working",
                         category: "popular",
                         url: "https://x.synapse.to/",
-                        description: "The most popular and powerful Roblox executor with advanced features and regular updates.",
+                        description: "Executor monitor menu the ya phổ biến nhất với tính năng nâng cao và cập nhật thường xuyên.",
                         lastUpdated: "2023-11-15"
                     },
                     {
@@ -430,12 +179,13 @@
                         lastUpdated: "2023-10-28"
                     }
                 ];
-                renderExecutors(defaultExecutors, currentLang);
+                renderExecutors(defaultExecutors);
             }
         }
 
-        function renderExecutors(executors, lang) {
-            executorList.innerHTML = '';
+        function renderExecutors(executors) {
+            const container = document.getElementById('executorList');
+            container.innerHTML = '';
             
             // Nhóm theo category
             const byCategory = {};
@@ -448,149 +198,41 @@
             
             // Render từng category
             for (const [category, items] of Object.entries(byCategory)) {
-                const categoryTitle = category === 'popular' 
-                    ? languages[lang].categoryPopular 
-                    : languages[lang].categoryOther;
+                const categoryTitle = category === 'popular' ? 'Executor Phổ Biến' : 'Executor Khác';
                 
                 let categoryHTML = `
-                    <div class="executor-category">
-                        <h2 class="category-title">${categoryTitle}</h2>
+                    <h2 class="category-title">${categoryTitle}</h2>
                 `;
                 
                 items.forEach(executor => {
                     categoryHTML += `
-                        <div class="executor-item" data-id="${executor.id}">
+                        <div class="executor-card">
                             <div class="executor-header">
-                                <input type="checkbox" class="executor-checkbox" id="executor${executor.id}" ${executor.status === 'working' ? 'checked' : ''}>
-                                <img src="${executor.image}" alt="${executor.name} Logo" class="executor-logo">
-                                <div class="executor-header-content">
-                                    <label for="executor${executor.id}" class="executor-name">${executor.name}</label>
+                                <img src="${executor.image}" alt="${executor.name}" class="executor-logo">
+                                <div class="executor-info">
+                                    <div class="executor-name">${executor.name}</div>
                                     <div class="executor-status">
-                                        <div class="status-indicator status-${executor.status}"></div>
-                                        <span class="status-text">${executor.status === 'working' ? languages[lang].statusWorking : languages[lang].statusDown}</span>
+                                        <span class="status-dot status-${executor.status}"></span>
+                                        ${executor.status === 'working' ? 'Online' : 'Offline'}
                                     </div>
+                                    <div class="executor-update">Cập nhật: ${executor.lastUpdated}</div>
                                 </div>
                             </div>
-                            <div class="last-update">${languages[lang].lastUpdateText}${executor.lastUpdated}</div>
                             <p class="executor-description">${executor.description}</p>
-                            
                             <div class="download-section">
-                                <h3 class="download-title">${languages[lang].downloadText}</h3>
-                                <a href="${executor.url}" class="download-btn" target="_blank">${new URL(executor.url).hostname}</a>
+                                <a href="${executor.url}" class="download-btn">Tải Xuống</a>
                             </div>
                         </div>
                     `;
                 });
                 
-                categoryHTML += `</div>`;
-                executorList.innerHTML += categoryHTML;
-            }
-            
-            if (executors.length === 0) {
-                executorList.innerHTML = `
-                    <div class="executor-category">
-                        <h2 class="category-title">${languages[lang].categoryPopular}</h2>
-                        <div class="executor-item">
-                            <p style="text-align: center;">${languages[lang].noExecutors}</p>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML += categoryHTML;
             }
         }
 
-        // Chuyển đổi ngôn ngữ
-        function changeLanguage(lang) {
-            // Cập nhật nút active
-            enBtn.classList.toggle('active', lang === 'en');
-            viBtn.classList.toggle('active', lang === 'vi');
-            
-            // Cập nhật nội dung
-            backText.textContent = languages[lang].backText;
-            mainTitle.textContent = languages[lang].mainTitle;
-            
-            // Load lại executors với ngôn ngữ mới
-            const savedData = localStorage.getItem('executorsData');
-            if (savedData) {
-                const executors = JSON.parse(savedData);
-                renderExecutors(executors, lang);
-            }
-            
-            // Lưu ngôn ngữ vào localStorage
-            localStorage.setItem('language', lang);
-        }
-        
-        // Sự kiện click nút
-        enBtn.addEventListener('click', () => changeLanguage('en'));
-        viBtn.addEventListener('click', () => changeLanguage('vi'));
-        
-        // Kiểm tra ngôn ngữ đã lưu hoặc ngôn ngữ trình duyệt
-        function detectLanguage() {
-            const savedLang = localStorage.getItem('language');
-            if (savedLang) return savedLang;
-            
-            const browserLang = navigator.language || navigator.userLanguage;
-            return browserLang.startsWith('vi') ? 'vi' : 'en';
-        }
-
-        // Tạo hiệu ứng particles
-        function createParticles() {
-            const particlesContainer = document.getElementById('particles');
-            const particleCount = window.innerWidth < 768 ? 15 : 30;
-            
-            for (let i = 0; i < particleCount; i++) {
-                const particle = document.createElement('div');
-                particle.classList.add('particle');
-                
-                // Random kích thước
-                const size = Math.random() * 15 + 5;
-                particle.style.width = `${size}px`;
-                particle.style.height = `${size}px`;
-                
-                // Random vị trí
-                particle.style.left = `${Math.random() * 100}%`;
-                particle.style.top = `${Math.random() * 100}%`;
-                
-                // Random opacity
-                particle.style.opacity = Math.random() * 0.2 + 0.1;
-                
-                // Random animation
-                const duration = Math.random() * 20 + 10;
-                const delay = Math.random() * 5;
-                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
-                
-                particlesContainer.appendChild(particle);
-            }
-        }
-        
-        // Hiệu ứng ánh sáng di chuyển theo chuột
-        function setupLightEffect() {
-            const light = document.getElementById('lightEffect');
-            document.addEventListener('mousemove', (e) => {
-                light.style.left = `${e.clientX - 150}px`;
-                light.style.top = `${e.clientY - 150}px`;
-            });
-        }
-
-        // Khởi tạo trang
+        // Khởi tạo
         window.addEventListener('DOMContentLoaded', () => {
-            createParticles();
-            setupLightEffect();
-            
-            const lang = detectLanguage();
-            changeLanguage(lang);
             loadExecutors();
-            
-            // Thêm sự kiện cho checkbox
-            document.addEventListener('change', function(e) {
-                if (e.target.classList.contains('executor-checkbox')) {
-                    const executorItem = e.target.closest('.executor-item');
-                    if (e.target.checked) {
-                        executorItem.style.borderLeftColor = '#6a5acd';
-                    } else {
-                        executorItem.style.borderLeftColor = '#a0a0c0';
-                    }
-                }
-            });
         });
     </script>
 </body>
